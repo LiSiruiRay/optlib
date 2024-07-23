@@ -71,7 +71,7 @@ variable {E₁ E₂ F : Type*}
 [NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂]
 [NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F]
 
-variable{ admm : ADMM E₁ E₂ F}
+variable (admm : ADMM E₁ E₂ F)
 
 /-Existence of kkt points in the admm-/
 -- def Existence_of_kkt : Prop :=
