@@ -102,21 +102,25 @@ instance : Existance_of_kkt E₁ E₂ F admm := {
 }
 
 open ADMM
+--收敛的kkt点x₁* ,x₂* ,y*
+def ADMM.x₁' {self : ADMM E₁ E₂ F} : E₁ := by
+   letI kkt: Existance_of_kkt E₁ E₂ F self := inferInstance
+   exact kkt.x₁
+
+def ADMM.x₂' {self : ADMM E₁ E₂ F} : E₂ := by
+   letI kkt: Existance_of_kkt E₁ E₂ F self := inferInstance
+   exact kkt.x₂
+
+def ADMM.y' {self : ADMM E₁ E₂ F} : F := by
+   letI kkt: Existance_of_kkt E₁ E₂ F self := inferInstance
+   exact kkt.y
+
 --误差变量
-def ADMM.e₁ {self : ADMM E₁ E₂ F} : ℕ → E₁ := by
-   letI kkt: Existance_of_kkt E₁ E₂ F self := inferInstance
-   exact fun n => (self.x₁ n) - kkt.x₁
+def ADMM.e₁ {self : ADMM E₁ E₂ F} : ℕ → E₁ := fun n => (self.x₁ n) - self.x₁'
 
-#check admm.e₁
---admm.e₂
---admm.e₂
-def ADMM.e₂ {self : ADMM E₁ E₂ F} : ℕ → E₂ := by
-   letI kkt: Existance_of_kkt E₁ E₂ F self := inferInstance
-   exact fun n => (self.x₂ n) - kkt.x₂
+def ADMM.e₂ {self : ADMM E₁ E₂ F} : ℕ → E₂ := fun n => (self.x₂ n) - self.x₂'
 
-def ADMM.ey {self : ADMM E₁ E₂ F} : ℕ → F := by
-   letI kkt: Existance_of_kkt E₁ E₂ F self := inferInstance
-   exact fun n => (self.y n) - kkt.y
+def ADMM.ey {self : ADMM E₁ E₂ F} : ℕ → F :=  fun n => (self.y n) - self.y'
 
 --辅助变量
 --这里定义域需要是非0自然数
@@ -160,12 +164,34 @@ lemma Φ_isdescending_eq3 : ∀ n , admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (adm
 Thereoms
 
 - theorem ContinuousLinearMap.adjoint_inner_left from https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/InnerProductSpace/Adjoint.html#ContinuousLinearMap.adjoint
--
+- subgradientAt_mono
 
 -/
+lemma subgradientAt_mono_u : ∀ n, (inner (admm.u (n + 1) + (ContinuousLinearMap.adjoint admm.A₁) admm.y') (admm.x₁ (n + 1) - admm.x₁')) ≥ (0 : ℝ) := sorry
+
+lemma subgradientAt_mono_v : ∀ n, (inner (admm.v (n + 1) + (ContinuousLinearMap.adjoint admm.A₂) admm.y') (admm.x₂ (n + 1) - admm.x₂')) ≥ (0 : ℝ) := sorry
+
+lemma expended_u_gt_zero : ∀ n, (inner
+   (
+      -admm.ey (n + 1) - ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1)))
+      - (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))))
+   )
+   (admm.A₁ (admm.e₁ (n + 1)))) ≥ (0: ℝ) := sorry
+
+lemma expended_v_gt_zero : ∀ n, (
+   inner (
+      -admm.ey (n + 1)
+      - ((1 - admm.τ) * admm.ρ) •
+         ((admm.A₁ (admm.e₁ (n + 1))) + (admm.A₂ (admm.e₂ (n + 1))))
+   ) (
+      admm.A₂ (admm.e₂ (n + 1))
+   )
+) ≥ (0 : ℝ) := sorry
+
 lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
 + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) ≥ 0 := sorry
+
 
 lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ*admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2
