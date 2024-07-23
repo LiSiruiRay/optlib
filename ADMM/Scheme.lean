@@ -188,23 +188,35 @@ lemma expended_v_gt_zero : ∀ n, (
    )
 ) ≥ (0 : ℝ) := sorry
 
+
+
+
 lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
 + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) ≥ 0 := by
    intro n
    #check inner (E:=ℝ)
-   have :
+   #check norm_sq_eq_inner
+   have h:
       (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1)))
       + admm.A₂ (e₂ (n + 1)))))
-      - (1-τ) * ρ * ‖admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))‖^2
+      - (1-admm.τ) * admm.ρ * ‖admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))‖^2
       + admm.ρ * ((inner (𝕜:=ℝ)) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1))))
       = (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
-      - ((1-τ) * ρ) * inner (𝕜:=ℝ) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
-      + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1)))) :=by
-        rw [InnerProductSpace.norm_sq_eq_inner]
+      - ((1-admm.τ) * admm.ρ) * inner (𝕜:=ℝ) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
+      + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1)))) := by
+        rw [norm_sq_eq_inner]
+   have h₂:
 
+      (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
+      - ((1-admm.τ) * admm.ρ) * inner (𝕜:=ℝ) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
+      + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1))))
+      = (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
+         -  inner (𝕜:=ℝ) ( ((1-admm.τ) * admm.ρ) • admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
+         + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1)))) :=
+         smul_left
 
-
+#check smul_left
 lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ*admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2
 + admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
