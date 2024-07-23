@@ -193,7 +193,7 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
 + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) ≥ 0 := by
    intro n
    #check inner (E:=ℝ)
-   calc
+   have :
       (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1)))
       + admm.A₂ (e₂ (n + 1)))))
       - (1-τ) * ρ * ‖admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))‖^2
@@ -201,7 +201,7 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
       = (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
       - ((1-τ) * ρ) * inner (𝕜:=ℝ) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
       + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1)))) :=by
-      --   rw [InnerProductSpace.norm_sq_eq_inner]
+        rw [InnerProductSpace.norm_sq_eq_inner]
 
 
 
