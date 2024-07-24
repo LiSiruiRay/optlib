@@ -256,35 +256,38 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
       + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1))))
          := by
          have h₂_sub:
-            - (1-admm.τ)*admm.ρ*inner
-               (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
-               (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+            - (1-admm.τ)*admm.ρ*
+                                 inner
+                                    (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+                                    (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
             =
             inner
                (- ((1-admm.τ)*admm.ρ) • (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))))
                (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
                := by
-               -- apply?
+               -- starRingEnd ℝ is the conjugate, need to prove that congugate under ℝ is itself, didn't find a good one that can directly use
                rw [smul_left]
                rw [starRingEnd_eq_R]
                ring
-               -- rw [neg_one_mul]
-               -- rfl
-               -- simp
-               -- apply?
-               -- ring
+         rw [← h₂_sub]
+         simp
+         ring
+   have h₃:
+      (
+         inner
+            (admm.ey (n + 1))
+            (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
+      )
+      =
 
-               -- apply starRingEnd_self_apply (- ((1-admm.τ)*admm.ρ))
-               -- #eval starRingEnd_self_apply (R := ℝ) (-((1 - admm.τ) * admm.ρ))
-               -- rw [starRingEnd_self_apply (-((1 - admm.τ) * admm.ρ))]
-               -- use starRingEnd_self_apply
-               -- rfl
-               -- ring
-               -- exact smul_left
-               -- apply?
+      (
+         inner
+            (-admm.ey (n + 1))
+            ((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))
+      ) := by
+         rw [neg_one_mul (α := F) ((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))]
 
-
-
+#check neg_one_mul
 
                -- exact
 
