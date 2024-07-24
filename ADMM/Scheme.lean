@@ -156,7 +156,7 @@ lemma Φ_isdescending_eq2 : ∀ n , (1/(admm.τ * admm.ρ)) • (admm.y (n+1) - 
 
 --证明化简时候会用
 lemma Φ_isdescending_eq3 : ∀ n , admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b
-= A_e_prod + admm.A₂ (admm.e₂ (n+1)) := sorry
+= Ae1 + admm.A₂ (admm.e₂ (n+1)) := sorry
 
 --lsr gyq
 --书430 (8.6.43)
@@ -193,7 +193,7 @@ lemma starRingEnd_eq_R (x : ℝ) : (starRingEnd ℝ) x = x := rfl
 #check starRingEnd_self_apply
 #check starRingEnd ℝ
 
-lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
+lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1)))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
 + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) ≥ 0 := by
    intro n
@@ -201,37 +201,73 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
    #check norm_sq_eq_inner
    -- set local variable to make everything concise
    let A_e_sum := (admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))
-   let A_e_prod := admm.A₁ (admm.e₁ (n+1))
+   -- let Ae1 := admm.A₁ (admm.e₁ (n+1))
    let A_x_sum := -admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))
    let ρ := admm.ρ
    let τ := admm.τ
    let ey := admm.ey
    let ey' := ey (n + 1)
+
+   let Ae1 := admm.A₁ (admm.e₁ (n + 1))
+   let Ae2 := admm.A₂ (admm.e₂ (n + 1))
+
+   -- have A_e_sum_eq : A_e_sum = (admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)) := by rfl
+   -- have A_x_sum_eq : A_x_sum = -admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1)) := by rfl
+   -- have ρ_eq : ρ = admm.ρ := by rfl
+   -- have τ_eq : τ = admm.τ := by rfl
+   -- have ey_eq : ey = admm.ey := by rfl
+   -- have ey'_eq : ey'= ey (n + 1) := by rfl
+   -- have Ae1_eq : Ae1 = admm.A₁ (admm.e₁ (n + 1)) := by rfl
+   -- have Ae2_eq : Ae2 = admm.A₂ (admm.e₂ (n + 1)) := by rfl
+
    calc
-      inner ey' (-(A_e_sum))
-      - (1 - τ) * ρ * ‖A_e_sum‖^2
-      + ρ * (inner (A_x_sum) (A_e_prod))
+      -- _=
+      -- inner ey' (-(A_e_sum))
+      -- - (1 - τ) * ρ * ‖A_e_sum‖^2
+      -- + ρ * (inner (A_x_sum) (Ae1)) := by
+      --    -- apply?
+      --    -- rw [A_e_sum_eq, A_x_sum_eq, ρ_eq, τ_eq, ey'_eq, Ae1_eq, ey_eq]
+
+
+      _
       =
       inner ey' (-(A_e_sum))
       - (1 - τ) * ρ * (inner A_e_sum A_e_sum)
-      + ρ * (inner (A_x_sum) (A_e_prod)) := by
+      + ρ * (inner (A_x_sum) (Ae1)) := by
       -- norm_sq_eq_inner will fail to recongnize the type without (𝕜:=ℝ)
          rw [norm_sq_eq_inner (𝕜:=ℝ) (A_e_sum)]
          rfl
-   _ =
-      inner ey' (-(A_e_sum))
-      + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
-      + ρ * (inner A_x_sum A_e_prod) := by
-         rw [smul_left]
-         rw [starRingEnd_eq_R]
-         ring
-   _ =
-      inner (-admm.ey (n + 1)) A_e_sum
-      + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
-      + ρ * (inner A_x_sum A_e_prod) := by
-      -- Ray is angery up to this point cuz who the f**k knows that 𝕜 is not 𝕂? I spent like three hours on fixing this studpid problem!!
-         rw [inner_neg_right (𝕜 := ℝ), inner_neg_left (𝕜 := ℝ)]
-   _ =
+      _ ≥ 0 := sorry
+   -- _ =
+   --    inner ey' (-(A_e_sum))
+   --    + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
+   --    + ρ * (inner A_x_sum Ae1) := by
+   --       rw [smul_left]
+   --       rw [starRingEnd_eq_R]
+   --       ring
+   -- _ =
+   --    inner (-ey') A_e_sum
+   --    + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
+   --    + ρ * (inner A_x_sum Ae1) := by
+   --    -- Ray is angery up to this point cuz who the f**k knows that 𝕜 is not 𝕂? I spent like three hours on fixing this studpid problem!!
+   --       rw [inner_neg_right (𝕜 := ℝ), inner_neg_left (𝕜 := ℝ)]
+   -- _ =
+   --    inner (-ey' - ((1 - τ) * ρ) • A_e_sum) A_e_sum
+   --    + ρ * (inner A_x_sum Ae1) := by
+   --    rw [add_left]
+   -- _ =
+   --      inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
+   --    + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
+   --    + ρ * (inner A_x_sum Ae1) := by
+   --    rw [add_right]
+   -- _ =
+   --      inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
+   --    + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
+   --    + ρ * (inner A_x_sum Ae1) := by rfl
+   -- _ =
+   --      inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
+   --    + inner (-ey' - ((1 - τ) * ρ) • A_e_sum + ρ • A_x_sum) Ae1 := by rfl
+   -- _ =
 
 #check neg_one_mul
 #check admm.A₁ (admm.e₁ (1))
