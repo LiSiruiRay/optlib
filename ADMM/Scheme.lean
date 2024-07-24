@@ -188,8 +188,10 @@ lemma expended_v_gt_zero : ∀ n, (
    )
 ) ≥ (0 : ℝ) := sorry
 
-lemma starRingEnd_eq_R : ∀ x ∈ ℝ, (starRingEnd ℝ) x = x := sorry
+lemma starRingEnd_eq_R (x : ℝ) : (starRingEnd ℝ) x = x := rfl
 
+#check starRingEnd_self_apply
+#check starRingEnd ℝ
 
 lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
@@ -264,6 +266,14 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
                := by
                -- apply?
                rw [smul_left]
+               rw [starRingEnd_eq_R]
+               ring
+               -- rw [neg_one_mul]
+               -- rfl
+               -- simp
+               -- apply?
+               -- ring
+
                -- apply starRingEnd_self_apply (- ((1-admm.τ)*admm.ρ))
                -- #eval starRingEnd_self_apply (R := ℝ) (-((1 - admm.τ) * admm.ρ))
                -- rw [starRingEnd_self_apply (-((1 - admm.τ) * admm.ρ))]
