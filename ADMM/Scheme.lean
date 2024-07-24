@@ -199,6 +199,8 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
    intro n
    #check inner (E:=ℝ)
    #check norm_sq_eq_inner
+   -- set local variable to make everything concise
+   -- let
    have h:
       (
          inner
@@ -285,6 +287,7 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
             (-admm.ey (n + 1))
             ((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))
       ) := by
+      -- Ray is angery up to this point cuz who the f**k knows that 𝕜 is not 𝕂? I spent like three hours on fixing this studpid problem!!
          rw [inner_neg_right (𝕜 := ℝ), inner_neg_left (𝕜 := ℝ)]
          -- apply?
          -- rw [@inner_neg_right (𝕂 := ℝ) (E := F) (admm.ey (n + 1)) ((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))]
