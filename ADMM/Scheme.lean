@@ -215,6 +215,7 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       inner ey' (-(A_e_sum))
       - (1 - τ) * ρ * (inner A_e_sum A_e_sum)
       + ρ * (inner (A_x_sum) (A_e_prod)) := by
+      -- norm_sq_eq_inner will fail to recongnize the type without (𝕜:=ℝ)
          rw [norm_sq_eq_inner (𝕜:=ℝ) (A_e_sum)]
          rfl
    have h₂:
@@ -222,27 +223,17 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       - (1 - τ) * ρ * (inner A_e_sum A_e_sum)
       + ρ * (inner (A_x_sum) (A_e_prod))
       =
-      inner (admm.ey (n + 1)) (-(A_e_sum))
+      inner ey' (-(A_e_sum))
       + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
       + ρ * (inner A_x_sum A_e_prod) := by
          rw [smul_left]
          rw [starRingEnd_eq_R]
          ring
    have h₃:
-      (
-         inner
-            (admm.ey (n + 1))
-            (-(A_e_sum))
-      )
-      =
-
-      (
-         inner
-            (-admm.ey (n + 1))
-            (A_e_sum)
-      ) := by
+      inner ey' (-(A_e_sum)) = inner (-admm.ey (n + 1)) A_e_sum := by
       -- Ray is angery up to this point cuz who the f**k knows that 𝕜 is not 𝕂? I spent like three hours on fixing this studpid problem!!
          rw [inner_neg_right (𝕜 := ℝ), inner_neg_left (𝕜 := ℝ)]
+
 
 #check neg_one_mul
 #check admm.A₁ (admm.e₁ (1))
