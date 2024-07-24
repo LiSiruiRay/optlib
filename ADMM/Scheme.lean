@@ -285,9 +285,16 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
             (-admm.ey (n + 1))
             ((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))
       ) := by
-         rw [neg_one_mul (α := F) ((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))]
+         rw [inner_neg_right]
+         -- apply?
+         -- rw [←neg_one_mul]
+
+         -- rw [neg_one_smul (R := ℝ) (M := L[ℝ] F) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))]
 
 #check neg_one_mul
+#check admm.A₁ (admm.e₁ (1))
+#check neg_one_smul
+#check inner_neg_left
 
                -- exact
 
