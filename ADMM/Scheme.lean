@@ -167,10 +167,34 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
 + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) ≥ 0 := sorry
 
-lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ*admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
+
+#check neg_sub
+#check neg_mul_eq_neg_mul
+lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ * admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))  -- part 1
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2
+-- part 2
 + admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
--admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) ) ≥ 0:= sorry
+-admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) ) ≥ 0 := by
+   -- part1: (τρ)⁻¹<e_y^{n+1},(e_y^{n}-e_y^{n+1})> = <e_y^{n+1},-(A_1e_1^{n+1}+A_2e_2^{n+1})>
+   -- part1.1: (τρ)⁻¹(e_y^{n}-e_y^{n+1}) = -(A_1x_1^{n+1}+A_2x_2^{n+1}-b)
+   have part1: ∀ n , 1/(admm.τ * admm.ρ) * (ADMM.ey n)-(ADMM.ey (n+1)) = -(admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b) := by  -- eq1 and eq2
+      intro n
+      calc
+      -- -(A_1x_1^{n+1}+A_2x_2^{n+1}-b) = -(A_1e_1^{n+1}+A_2e_2^{n+1})
+         1/(admm.τ * admm.ρ) * (ADMM.ey n)-(ADMM.ey (n+1)) = - (1/(admm.τ * admm.ρ) * (ADMM.ey (n+1))-(ADMM.ey n)) := by
+            rw [← neg_sub (ADMM.ey (n+1)) (ADMM.ey n)]
+            simp
+         _ =  -(admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b) := by
+            rw [← Φ_isdescending_eq2, ← Φ_isdescending_eq1]
+         _ = - (admm.A₁ (ADMM.e₁ (n+1)) + admm.A₂ (ADMM.e₂ (n+1))) := by
+            rw [Φ_isdescending_eq3]
+   -- part2: ρ<A_2(x_2^{n+1}-x_2^n),A_1x_1^{n+1}+A_2x_2^{n+1}-b> - ρ<A_2(x_2^{n+1}-x_2^n),A_2e_2^{n+1}>
+   --        = ρ<-A_2(x_2^n-x_2^{n+1})),A_1e_1^{n+1}>
+   have part2: ∀ n , admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
+   -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) )
+   =  admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) := by
+      intro n
+   exact expended_u_v_gt_zero
 
 --xzx dyx
 --书431 第五行
