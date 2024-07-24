@@ -188,7 +188,7 @@ lemma expended_v_gt_zero : ∀ n, (
    )
 ) ≥ (0 : ℝ) := sorry
 
-
+lemma starRingEnd_eq_R : ∀ x ∈ ℝ, (starRingEnd ℝ) x = x := sorry
 
 
 lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))))
@@ -224,10 +224,58 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
             inner
                (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
                (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))) := by
+               -- norm_sq_eq_inner fails to find the field without (𝕜:=ℝ)
                rw [norm_sq_eq_inner (𝕜:=ℝ) (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))]
                rfl
          rw [h_sub]
-   have
+   have h₂:
+      (
+         inner
+            (admm.ey (n + 1))
+            (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
+      )
+      - (1-admm.τ)*admm.ρ*
+                           inner
+                              (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+                              (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+      + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1))))
+
+      =
+
+      (
+         inner
+            (admm.ey (n + 1))
+            (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
+      )
+      +
+                           inner
+                              (- ((1-admm.τ)*admm.ρ) • (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))))
+                              (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+      + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1))))
+         := by
+         have h₂_sub:
+            - (1-admm.τ)*admm.ρ*inner
+               (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+               (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+            =
+            inner
+               (- ((1-admm.τ)*admm.ρ) • (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))))
+               (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+               := by
+               -- apply?
+               rw [smul_left]
+               -- apply starRingEnd_self_apply (- ((1-admm.τ)*admm.ρ))
+               -- #eval starRingEnd_self_apply (R := ℝ) (-((1 - admm.τ) * admm.ρ))
+               -- rw [starRingEnd_self_apply (-((1 - admm.τ) * admm.ρ))]
+               -- use starRingEnd_self_apply
+               -- rfl
+               -- ring
+               -- exact smul_left
+               -- apply?
+
+
+
+
                -- exact
 
    -- have h₂:
