@@ -198,29 +198,47 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
    #check inner (E:=ℝ)
    #check norm_sq_eq_inner
    have h:
-      (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1)))
-      + admm.A₂ (e₂ (n + 1)))))
-      - ((1-admm.τ) * admm.ρ) * ‖admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))‖^2
-      + admm.ρ * ((inner (𝕜:=ℝ)) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1))))
-      = (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
-      - ((1-admm.τ) * admm.ρ) * inner (𝕜:=ℝ) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
-      + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1)))) := by
-         -- have h_sub:
-         -- -- norm_sq_eq_inner is unable to find the field, giving out the error of mis type, thus add (𝕜:=ℝ)
-         --    ‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
-         --    =
-         --    @inner ℝ F _ (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))) (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))) := by
-         --       rw [norm_sq_eq_inner (𝕜:=ℝ) (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))]
-        rw [norm_sq_eq_inner (𝕜:=ℝ) (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))]
-   have h₂:
+      (
+         inner
+            (admm.ey (n + 1))
+            (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
+      )
+      - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
+      + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1))))
 
-      (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
-      - ((1-admm.τ) * admm.ρ) * inner (𝕜:=ℝ) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
-      + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1))))
-      = (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
-         -  inner (𝕜:=ℝ) ( ((1-admm.τ) * admm.ρ) • admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
-         + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1)))) :=
-         smul_left
+      =
+
+      (
+         inner
+            (admm.ey (n + 1))
+            (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
+      )
+      - (1-admm.τ)*admm.ρ*
+                           inner
+                              (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+                              (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+      + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) := by
+         have h_sub :
+            ‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
+            =
+            inner
+               (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+               (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))) := by
+               rw [norm_sq_eq_inner (𝕜:=ℝ) (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))]
+               rfl
+         rw [h_sub]
+   have
+               -- exact
+
+   -- have h₂:
+
+   --    (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
+   --    - ((1-admm.τ) * admm.ρ) * inner (𝕜:=ℝ) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
+   --    + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1))))
+   --    = (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
+   --       -  inner (𝕜:=ℝ) ( ((1-admm.τ) * admm.ρ) • admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
+   --       + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1)))) :=
+   --       smul_left
 
 #check smul_left
 lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ*admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
