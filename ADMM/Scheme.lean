@@ -200,12 +200,18 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
    have h:
       (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1)))
       + admm.A₂ (e₂ (n + 1)))))
-      - (1-admm.τ) * admm.ρ * ‖admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))‖^2
+      - ((1-admm.τ) * admm.ρ) * ‖admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))‖^2
       + admm.ρ * ((inner (𝕜:=ℝ)) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1))))
       = (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
       - ((1-admm.τ) * admm.ρ) * inner (𝕜:=ℝ) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
       + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1)))) := by
-        rw [norm_sq_eq_inner]
+         -- have h_sub:
+         -- -- norm_sq_eq_inner is unable to find the field, giving out the error of mis type, thus add (𝕜:=ℝ)
+         --    ‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
+         --    =
+         --    @inner ℝ F _ (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))) (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))) := by
+         --       rw [norm_sq_eq_inner (𝕜:=ℝ) (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))]
+        rw [norm_sq_eq_inner (𝕜:=ℝ) (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))]
    have h₂:
 
       (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
