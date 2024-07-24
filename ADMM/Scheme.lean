@@ -156,7 +156,7 @@ lemma Φ_isdescending_eq2 : ∀ n , (1/(admm.τ * admm.ρ)) • (admm.y (n+1) - 
 
 --证明化简时候会用
 lemma Φ_isdescending_eq3 : ∀ n , admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b
-= admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)) := sorry
+= A_e_prod + admm.A₂ (admm.e₂ (n+1)) := sorry
 
 --lsr gyq
 --书430 (8.6.43)
@@ -193,79 +193,72 @@ lemma starRingEnd_eq_R (x : ℝ) : (starRingEnd ℝ) x = x := rfl
 #check starRingEnd_self_apply
 #check starRingEnd ℝ
 
-lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))))
+lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
 + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) ≥ 0 := by
    intro n
    #check inner (E:=ℝ)
    #check norm_sq_eq_inner
    -- set local variable to make everything concise
-   -- let
+   let A_e_sum := (admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))
+   let A_e_prod := admm.A₁ (admm.e₁ (n+1))
+   let A_x_sum := -admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))
+   let ρ := admm.ρ
+   let τ := admm.τ
+   let ey := admm.ey
+   let ey' := ey (n + 1)
    have h:
-      (
-         inner
-            (admm.ey (n + 1))
-            (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
-      )
-      - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
-      + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1))))
-
+      inner ey' (-(A_e_sum))
+      - (1 - τ) * ρ * ‖A_e_sum‖^2
+      + ρ * (inner (A_x_sum) (A_e_prod))
       =
-
-      (
-         inner
-            (admm.ey (n + 1))
-            (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
-      )
-      - (1-admm.τ)*admm.ρ*
-                           inner
-                              (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
-                              (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
-      + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) := by
+      inner ey' (-(A_e_sum))
+      - (1 - τ) * ρ * (inner A_e_sum A_e_sum)
+      + ρ * (inner (A_x_sum) (A_e_prod)) := by
          have h_sub :
             ‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
             =
             inner
-               (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
-               (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))) := by
+               (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
+               (A_e_prod + admm.A₂ (admm.e₂ (n+1))) := by
                -- norm_sq_eq_inner fails to find the field without (𝕜:=ℝ)
-               rw [norm_sq_eq_inner (𝕜:=ℝ) (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))]
+               rw [norm_sq_eq_inner (𝕜:=ℝ) (A_e_prod + admm.A₂ (admm.e₂ (n+1)))]
                rfl
          rw [h_sub]
    have h₂:
       (
          inner
             (admm.ey (n + 1))
-            (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
+            (-(A_e_sum))
       )
       - (1-admm.τ)*admm.ρ*
                            inner
-                              (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
-                              (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
-      + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1))))
+                              (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
+                              (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
+      + admm.ρ * (inner (A_x_sum) (A_e_prod))
 
       =
 
       (
          inner
             (admm.ey (n + 1))
-            (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
+            (-(A_e_sum))
       )
       +
                            inner
-                              (- ((1-admm.τ)*admm.ρ) • (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))))
-                              (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
-      + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1))))
+                              (- ((1-admm.τ)*admm.ρ) • (A_e_prod + admm.A₂ (admm.e₂ (n+1))))
+                              (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
+      + admm.ρ * (inner (A_x_sum) (A_e_prod))
          := by
          have h₂_sub:
             - (1-admm.τ)*admm.ρ*
                                  inner
-                                    (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
-                                    (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+                                    (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
+                                    (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
             =
             inner
-               (- ((1-admm.τ)*admm.ρ) • (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))))
-               (admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)))
+               (- ((1-admm.τ)*admm.ρ) • (A_e_prod + admm.A₂ (admm.e₂ (n+1))))
+               (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
                := by
                -- starRingEnd ℝ is the conjugate, need to prove that congugate under ℝ is itself, didn't find a good one that can directly use
                rw [smul_left]
@@ -278,23 +271,17 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
       (
          inner
             (admm.ey (n + 1))
-            (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))
+            (-(A_e_sum))
       )
       =
 
       (
          inner
             (-admm.ey (n + 1))
-            ((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))
+            (A_e_sum)
       ) := by
       -- Ray is angery up to this point cuz who the f**k knows that 𝕜 is not 𝕂? I spent like three hours on fixing this studpid problem!!
          rw [inner_neg_right (𝕜 := ℝ), inner_neg_left (𝕜 := ℝ)]
-         -- apply?
-         -- rw [@inner_neg_right (𝕂 := ℝ) (E := F) (admm.ey (n + 1)) ((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))]
-         -- apply?
-         -- rw [←neg_one_mul]
-
-         -- rw [neg_one_smul (R := ℝ) (M := L[ℝ] F) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))]
 
 #check neg_one_mul
 #check admm.A₁ (admm.e₁ (1))
@@ -307,10 +294,10 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
 
    --    (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
    --    - ((1-admm.τ) * admm.ρ) * inner (𝕜:=ℝ) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
-   --    + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1))))
+   --    + admm.ρ * (inner (𝕜:=ℝ) (A_x_sum) (admm.A₁ (e₁ (n+1))))
    --    = (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
    --       -  inner (𝕜:=ℝ) ( ((1-admm.τ) * admm.ρ) • admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
-   --       + admm.ρ * (inner (𝕜:=ℝ) (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (e₁ (n+1)))) :=
+   --       + admm.ρ * (inner (𝕜:=ℝ) (A_x_sum) (admm.A₁ (e₁ (n+1)))) :=
    --       smul_left
 
 #check smul_left
