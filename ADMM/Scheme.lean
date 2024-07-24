@@ -213,14 +213,6 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
 
 
    calc
-      -- _=
-      -- inner ey' (-(A_e_sum))
-      -- - (1 - τ) * ρ * ‖A_e_sum‖^2
-      -- + ρ * (inner (A_x_sum) (Ae1)) := by
-      --    -- apply?
-      --    -- rw [A_e_sum_eq, A_x_sum_eq, ρ_eq, τ_eq, ey'_eq, Ae1_eq, ey_eq]
-
-
       _
       =
       inner ey' (-(A_e_sum))
