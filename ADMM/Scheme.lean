@@ -211,14 +211,6 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
    let Ae1 := admm.A₁ (admm.e₁ (n + 1))
    let Ae2 := admm.A₂ (admm.e₂ (n + 1))
 
-   -- have A_e_sum_eq : A_e_sum = (admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)) := by rfl
-   -- have A_x_sum_eq : A_x_sum = -admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1)) := by rfl
-   -- have ρ_eq : ρ = admm.ρ := by rfl
-   -- have τ_eq : τ = admm.τ := by rfl
-   -- have ey_eq : ey = admm.ey := by rfl
-   -- have ey'_eq : ey'= ey (n + 1) := by rfl
-   -- have Ae1_eq : Ae1 = admm.A₁ (admm.e₁ (n + 1)) := by rfl
-   -- have Ae2_eq : Ae2 = admm.A₂ (admm.e₂ (n + 1)) := by rfl
 
    calc
       -- _=
@@ -237,37 +229,37 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       -- norm_sq_eq_inner will fail to recongnize the type without (𝕜:=ℝ)
          rw [norm_sq_eq_inner (𝕜:=ℝ) (A_e_sum)]
          rfl
-      _ ≥ 0 := sorry
-   -- _ =
-   --    inner ey' (-(A_e_sum))
-   --    + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
-   --    + ρ * (inner A_x_sum Ae1) := by
-   --       rw [smul_left]
-   --       rw [starRingEnd_eq_R]
-   --       ring
-   -- _ =
-   --    inner (-ey') A_e_sum
-   --    + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
-   --    + ρ * (inner A_x_sum Ae1) := by
-   --    -- Ray is angery up to this point cuz who the f**k knows that 𝕜 is not 𝕂? I spent like three hours on fixing this studpid problem!!
-   --       rw [inner_neg_right (𝕜 := ℝ), inner_neg_left (𝕜 := ℝ)]
-   -- _ =
-   --    inner (-ey' - ((1 - τ) * ρ) • A_e_sum) A_e_sum
-   --    + ρ * (inner A_x_sum Ae1) := by
-   --    rw [add_left]
-   -- _ =
-   --      inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
-   --    + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
-   --    + ρ * (inner A_x_sum Ae1) := by
-   --    rw [add_right]
-   -- _ =
-   --      inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
-   --    + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
-   --    + ρ * (inner A_x_sum Ae1) := by rfl
-   -- _ =
-   --      inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
-   --    + inner (-ey' - ((1 - τ) * ρ) • A_e_sum + ρ • A_x_sum) Ae1 := by rfl
-   -- _ =
+   _ =
+      inner ey' (-(A_e_sum))
+      + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
+      + ρ * (inner A_x_sum Ae1) := by
+         rw [smul_left]
+         rw [starRingEnd_eq_R]
+         ring
+   _ =
+      inner (-ey') A_e_sum
+      + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
+      + ρ * (inner A_x_sum Ae1) := by
+      -- Ray is angery up to this point cuz who the f**k knows that 𝕜 is not 𝕂? I spent like three hours on fixing this studpid problem!!
+         rw [inner_neg_right (𝕜 := ℝ), inner_neg_left (𝕜 := ℝ)]
+   _ =
+      inner (-ey' - ((1 - τ) * ρ) • A_e_sum) A_e_sum
+      + ρ * (inner A_x_sum Ae1) := by
+      rw [add_left]
+   _ =
+        inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
+      + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
+      + ρ * (inner A_x_sum Ae1) := by
+      rw [add_right]
+   _ =
+        inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
+      + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
+      + ρ * (inner A_x_sum Ae1) := by rfl
+   _ =
+        inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
+      + inner (-ey' - ((1 - τ) * ρ) • A_e_sum + ρ • A_x_sum) Ae1 := by rfl
+   _
+   ≥ 0 := sorry
 
 #check neg_one_mul
 #check admm.A₁ (admm.e₁ (1))
