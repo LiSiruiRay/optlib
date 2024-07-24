@@ -218,46 +218,15 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
          rw [norm_sq_eq_inner (𝕜:=ℝ) (A_e_sum)]
          rfl
    have h₂:
-      (
-         inner
-            (admm.ey (n + 1))
-            (-(A_e_sum))
-      )
-      - (1-admm.τ)*admm.ρ*
-                           inner
-                              (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
-                              (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
-      + admm.ρ * (inner (A_x_sum) (A_e_prod))
-
+      inner ey' (-(A_e_sum))
+      - (1 - τ) * ρ * (inner A_e_sum A_e_sum)
+      + ρ * (inner (A_x_sum) (A_e_prod))
       =
-
-      (
-         inner
-            (admm.ey (n + 1))
-            (-(A_e_sum))
-      )
-      +
-                           inner
-                              (- ((1-admm.τ)*admm.ρ) • (A_e_prod + admm.A₂ (admm.e₂ (n+1))))
-                              (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
-      + admm.ρ * (inner (A_x_sum) (A_e_prod))
-         := by
-         have h₂_sub:
-            - (1-admm.τ)*admm.ρ*
-                                 inner
-                                    (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
-                                    (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
-            =
-            inner
-               (- ((1-admm.τ)*admm.ρ) • (A_e_prod + admm.A₂ (admm.e₂ (n+1))))
-               (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
-               := by
-               -- starRingEnd ℝ is the conjugate, need to prove that congugate under ℝ is itself, didn't find a good one that can directly use
-               rw [smul_left]
-               rw [starRingEnd_eq_R]
-               ring
-         rw [← h₂_sub]
-         simp
+      inner (admm.ey (n + 1)) (-(A_e_sum))
+      + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
+      + ρ * (inner A_x_sum A_e_prod) := by
+         rw [smul_left]
+         rw [starRingEnd_eq_R]
          ring
    have h₃:
       (
