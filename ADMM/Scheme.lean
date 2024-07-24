@@ -215,16 +215,8 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       inner ey' (-(A_e_sum))
       - (1 - τ) * ρ * (inner A_e_sum A_e_sum)
       + ρ * (inner (A_x_sum) (A_e_prod)) := by
-         have h_sub :
-            ‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
-            =
-            inner
-               (A_e_prod + admm.A₂ (admm.e₂ (n+1)))
-               (A_e_prod + admm.A₂ (admm.e₂ (n+1))) := by
-               -- norm_sq_eq_inner fails to find the field without (𝕜:=ℝ)
-               rw [norm_sq_eq_inner (𝕜:=ℝ) (A_e_prod + admm.A₂ (admm.e₂ (n+1)))]
-               rfl
-         rw [h_sub]
+         rw [norm_sq_eq_inner (𝕜:=ℝ) (A_e_sum)]
+         rfl
    have h₂:
       (
          inner
