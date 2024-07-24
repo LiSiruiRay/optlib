@@ -210,11 +210,8 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
 
    let Ae1 := admm.A₁ (admm.e₁ (n + 1))
    let Ae2 := admm.A₂ (admm.e₂ (n + 1))
-
-
    calc
-      _
-      =
+   _ =
       inner ey' (-(A_e_sum))
       - (1 - τ) * ρ * (inner A_e_sum A_e_sum)
       + ρ * (inner (A_x_sum) (Ae1)) := by
@@ -233,11 +230,19 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       + inner (- ((1 - τ) * ρ) • A_e_sum) A_e_sum
       + ρ * (inner A_x_sum Ae1) := by
       -- Ray is angery up to this point cuz who the f**k knows that 𝕜 is not 𝕂? I spent like three hours on fixing this studpid problem!!
-         rw [inner_neg_right (𝕜 := ℝ), inner_neg_left (𝕜 := ℝ)]
+         rw [inner_neg_right (𝕜 := ℝ), inner_neg_left (𝕜 := ℝ), inner_neg_left (𝕜 := ℝ)]
    _ =
       inner (-ey' - ((1 - τ) * ρ) • A_e_sum) A_e_sum
       + ρ * (inner A_x_sum Ae1) := by
-      rw [add_left]
+      rw [← add_left]
+      ring
+      have sub: -ey' + (τ * ρ - ρ) • A_e_sum = -ey' - (-(τ * ρ) + ρ) • A_e_sum := by
+
+      -- rw [neg_add  (-(τ * ρ))  ρ]
+      apply?
+      -- rw [← neg_one_mul_add (-(τ * ρ) + ρ)]
+      -- rw [neg_neg (- (-(τ * ρ) + ρ))]
+      rfl
    _ =
         inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
       + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
@@ -257,6 +262,8 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
 #check admm.A₁ (admm.e₁ (1))
 #check neg_one_smul
 #check inner_neg_left
+#check add_neg
+#check neg_add
 
                -- exact
 
