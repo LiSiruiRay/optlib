@@ -1,4 +1,5 @@
 import Convex.Function.Proximal
+import Mathlib.Topology.MetricSpace.Sequences
 
 noncomputable section
 
@@ -6,9 +7,9 @@ open Set InnerProductSpace Topology Filter
 
 --admm解决问题的基本形式
 class Opt_problem (E₁ E₂ F : Type*)
-[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁]
-[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂]
-[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F]
+[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁] [FiniteDimensional ℝ E₁]
+[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂] [FiniteDimensional ℝ E₂]
+[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F] [FiniteDimensional ℝ F]
 where
    f₁ : E₁ → ℝ
    f₂ : E₂ → ℝ
@@ -31,23 +32,24 @@ noncomputable def Admm_sub_Isunique {E : Type*}(f : E → ℝ )(x : E)( _h : IsM
 #check ContinuousLinearMap
 --增广lagrange函数
 def Augmented_Lagrangian_Function (E₁ E₂ F : Type*)
-[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁]
-[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂]
-[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F]
+[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁] [FiniteDimensional ℝ E₁]
+[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂] [FiniteDimensional ℝ E₂]
+[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F] [FiniteDimensional ℝ F]
 (opt : Opt_problem E₁ E₂ F)(ρ : ℝ): E₁ × E₂ × F → ℝ :=
    fun (x₁ , x₂ , y) =>  (opt.f₁ x₁) + (opt.f₂ x₂) + inner y  ((opt.A₁ x₁) + (opt.A₂ x₂) - opt.b) + ρ / 2 * ‖(opt.A₁ x₁) + (opt.A₂ x₂) - opt.b‖^2
 
 --ADMM的基本迭代格式
 class ADMM (E₁ E₂ F : Type*)
-[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁]
-[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂]
-[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F]
+[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁] [FiniteDimensional ℝ E₁]
+[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂] [FiniteDimensional ℝ E₂]
+[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F] [FiniteDimensional ℝ F]
 extends (Opt_problem E₁ E₂ F) where
    x₁ : ℕ → E₁
    x₂ : ℕ → E₂
    y  : ℕ → F
    ρ  : ℝ
    τ  : ℝ
+   hrho : ρ > 0
    htau  : 0 < τ ∧ τ < ( 1 + √ 5 ) / 2
    itex₁ : ∀ k, IsMinOn (fun x₁ ↦ (Augmented_Lagrangian_Function E₁ E₂ F toOpt_problem ρ) (x₁ , x₂ k , y k)) univ (x₁ ( k + 1 ))
    uitex₁ : ∀ k , Admm_sub_Isunique (fun x₁ ↦ (Augmented_Lagrangian_Function E₁ E₂ F toOpt_problem ρ) (x₁ , x₂ k , y k)) (x₁ ( k + 1 )) (itex₁ k)
@@ -57,9 +59,9 @@ extends (Opt_problem E₁ E₂ F) where
 
 --凸的kkt条件
 class Convex_KKT {E₁ E₂ F : Type*}
-[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁]
-[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂]
-[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F]
+[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁] [FiniteDimensional ℝ E₁]
+[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂] [FiniteDimensional ℝ E₂]
+[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F] [FiniteDimensional ℝ F]
 (x₁ : E₁ )(x₂ : E₂)(y : F) (opt : Opt_problem E₁ E₂ F) :Prop where
    subgrad₁ : -(ContinuousLinearMap.adjoint opt.A₁) y ∈ SubderivAt opt.f₁ x₁
    subgrad₂ : -(ContinuousLinearMap.adjoint opt.A₂) y ∈ SubderivAt opt.f₂ x₂
@@ -67,25 +69,17 @@ class Convex_KKT {E₁ E₂ F : Type*}
 
 
 variable {E₁ E₂ F : Type*}
-[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁]
-[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂]
-[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F]
+[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁] [FiniteDimensional ℝ E₁]
+[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂] [FiniteDimensional ℝ E₂]
+[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F] [FiniteDimensional ℝ F]
 
-variable (admm : ADMM E₁ E₂ F)
+variable( admm : ADMM E₁ E₂ F)
 
-/-Existence of kkt points in the admm-/
--- def Existence_of_kkt : Prop :=
---    ∃ (x₁:E₁) (x₂:E₂) (y:F) , Convex_KKT x₁ x₂ y admm.toOpt_problem
--- instance : Fact (Existence_of_kkt E₁ E₂ F admm) := {
---    out := by
-
---       sorry
--- }
 
 class Existance_of_kkt (E₁ E₂ F : Type*)
-[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁]
-[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂]
-[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F]
+[NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [CompleteSpace E₁] [ProperSpace E₁] [FiniteDimensional ℝ E₁]
+[NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [CompleteSpace E₂] [ProperSpace E₂] [FiniteDimensional ℝ E₂]
+[NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [CompleteSpace F ] [ProperSpace F] [FiniteDimensional ℝ F]
 (admm : ADMM E₁ E₂ F)
    where
    x₁ : E₁
@@ -94,7 +88,7 @@ class Existance_of_kkt (E₁ E₂ F : Type*)
    h : Convex_KKT x₁ x₂ y admm.toOpt_problem
 
 --证明存在kky条件（由基本格式存在最优解来证明）
-instance : Existance_of_kkt E₁ E₂ F admm := {
+def ADMM.kkt : Existance_of_kkt E₁ E₂ F admm := {
    x₁ := sorry
    x₂ := sorry
    y := sorry
@@ -102,21 +96,23 @@ instance : Existance_of_kkt E₁ E₂ F admm := {
 }
 
 open ADMM
+--收敛的kkt点x₁* ,x₂* ,y*
+def ADMM.x₁' {self : ADMM E₁ E₂ F} : E₁ := self.kkt.x₁
+
+def ADMM.x₂' {self : ADMM E₁ E₂ F} : E₂ := self.kkt.x₂
+
+def ADMM.y' {self : ADMM E₁ E₂ F} : F := self.kkt.y
+
+lemma Satisfaction_ofthekkt : Convex_KKT admm.x₁' admm.x₂' admm.y' admm.toOpt_problem := by
+   simp [x₁',x₂',y']
+   exact admm.kkt.h
+
 --误差变量
-def ADMM.e₁ {self : ADMM E₁ E₂ F} : ℕ → E₁ := by
-   letI kkt: Existance_of_kkt E₁ E₂ F self := inferInstance
-   exact fun n => (self.x₁ n) - kkt.x₁
+def ADMM.e₁ {self : ADMM E₁ E₂ F} : ℕ → E₁ := fun n => (self.x₁ n) - self.x₁'
 
-#check admm.e₁
---admm.e₂
---admm.e₂
-def ADMM.e₂ {self : ADMM E₁ E₂ F} : ℕ → E₂ := by
-   letI kkt: Existance_of_kkt E₁ E₂ F self := inferInstance
-   exact fun n => (self.x₂ n) - kkt.x₂
+def ADMM.e₂ {self : ADMM E₁ E₂ F} : ℕ → E₂ := fun n => (self.x₂ n) - self.x₂'
 
-def ADMM.ey {self : ADMM E₁ E₂ F} : ℕ → F := by
-   letI kkt: Existance_of_kkt E₁ E₂ F self := inferInstance
-   exact fun n => (self.y n) - kkt.y
+def ADMM.ey {self : ADMM E₁ E₂ F} : ℕ → F :=  fun n => (self.y n) - self.y'
 
 --辅助变量
 --这里定义域需要是非0自然数
@@ -128,72 +124,141 @@ def ADMM.v {self : ADMM E₁ E₂ F} : ℕ → E₂ := fun n => -(ContinuousLine
 
 def ADMM.Ψ {self : ADMM E₁ E₂ F} : ℕ → ℝ  := fun n => 1/(self.τ*self.ρ)*‖self.ey n‖^2 + self.ρ*‖self.A₂ (self.e₂ n)‖^2
 
-def ADMM.Φ {self : ADMM E₁ E₂ F} : ℕ → ℝ  := fun n => (self.Ψ n) + ((max (1-self.τ) (1-1/self.τ))*self.ρ) * ‖self.A₁ ((self.e₁) n) + self.A₂ ((self.e₂) n)‖ ^2
+noncomputable def ADMM.Φ {self : ADMM E₁ E₂ F} : ℕ → ℝ  :=
+fun n =>
+(self.Ψ n) + ((max (1-self.τ) (1-1/self.τ))*self.ρ) * ‖self.A₁ ((self.e₁) n) + self.A₂ ((self.e₂) n)‖ ^2
 
 def ADMM.υ {self : ADMM E₁ E₂ F} : ℕ → F  := fun n => (self.y n) + ((1 - self.τ) * self.ρ)•(self.A₁ (self.x₁ n) + self.A₂ (self.x₂ n) - self.b)
 
 def ADMM.M {self : ADMM E₁ E₂ F} : ℕ+→ ℝ  := fun n =>  ((1 - self.τ) * self.ρ)* (inner (self.A₂ ((self.x₂ n) - (self.x₂ (n-1)))) (self.A₁ (self.x₁ (n-1)) + self.A₂ (self.x₂ (n-1)) - self.b))
 
+lemma ADMM_iter_process₁ : ∀ n ,
+(-(ContinuousLinearMap.adjoint admm.A₁) (admm.y n)
+- admm.ρ •
+((ContinuousLinearMap.adjoint admm.A₁) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ n) -admm.b)))
+∈ SubderivAt admm.f₁ (admm.x₁ (n+1)) := sorry
+
+lemma ADMM_iter_process₂ : ∀ n ,
+(-(ContinuousLinearMap.adjoint admm.A₂) (admm.y n)
+- admm.ρ •
+((ContinuousLinearMap.adjoint admm.A₂) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) -admm.b)))
+∈ SubderivAt admm.f₂ (admm.x₂ (n+1)) := sorry
+
 --lyq pyr
 --u在次梯度里面
-lemma u_inthesubgradient : ∀ n : ℕ+, (admm.u) n ∈ SubderivAt admm.f₁ (admm.x₁ n) := sorry
+lemma u_inthesubgradient : ∀ n : ℕ+ , (admm.u) n ∈ SubderivAt admm.f₁ (admm.x₁ n) := sorry
 
 --v在次梯度里面
-lemma v_inthesubgradient : ∀ n ≥ 1 , (admm.v) n ∈ SubderivAt admm.f₂ (admm.x₂ n) := sorry
+lemma v_inthesubgradient : ∀ n : ℕ+ , (admm.v) n ∈ SubderivAt admm.f₂ (admm.x₂ n) := sorry
 
 --lhj mht
 --书430 (8.6.42) 第一个等于号
 lemma Φ_isdescending_eq1 : ∀ n , admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b
-= (1/(admm.τ * admm.ρ)) • (admm.y (n+1) - admm.y n):= sorry
+= (1/(admm.τ * admm.ρ)) • (admm.y (n+1) - admm.y n):= by
+   intro n
+   rw [admm.itey n,add_comm (admm.y n)] -- , div_eq_mul_inv, one_mul
+   simp only [one_div, mul_inv_rev, add_sub_cancel_right]
+   rw [smul_smul, mul_assoc]
+   nth_rw 2 [← mul_assoc]
+   rw [inv_mul_cancel, one_mul, inv_mul_cancel, one_smul]
+   apply ne_of_gt admm.hrho
+   rcases admm.htau with ⟨h₁, _⟩
+   apply ne_of_gt h₁
+
 
 --书430 (8.6.42) 第二个等于号
 lemma Φ_isdescending_eq2 : ∀ n , (1/(admm.τ * admm.ρ)) • (admm.y (n+1) - admm.y n)
-= (1/(admm.τ * admm.ρ)) • (admm.ey (n+1) - admm.ey n):= sorry
+= (1/(admm.τ * admm.ρ)) • (admm.ey (n+1) - admm.ey n):= by
+   intro n
+   calc
+      _ = (1/(admm.τ * admm.ρ)) • (admm.y (n+1) - admm.y' + admm.y' - admm.y n) := by rw [sub_add, sub_self, sub_zero]
+      _ = (1/(admm.τ * admm.ρ)) • (admm.y (n+1) - admm.y' - (admm.y n - admm.y')) := by simp only [one_div,
+        mul_inv_rev, sub_add_cancel, sub_sub_sub_cancel_right]
+
 
 --证明化简时候会用
 lemma Φ_isdescending_eq3 : ∀ n , admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b
-= admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)) := sorry
+= admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)) := by
+   intro n
+   calc
+      _ = admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - (admm.A₁ (admm.x₁') + admm.A₂ (admm.x₂')) := by rw [(Satisfaction_ofthekkt admm).eq]
+      _ = admm.A₁ (admm.x₁ (n+1)) - admm.A₁ (admm.x₁') + (admm.A₂ (admm.x₂ (n+1)) - admm.A₂ (admm.x₂')) := by
+         exact
+           add_sub_add_comm ((Opt_problem.A₁ E₂) (x₁ E₂ F (n + 1)))
+             ((Opt_problem.A₂ E₁) (x₂ E₁ F (n + 1))) ((Opt_problem.A₁ E₂) x₁')
+             ((Opt_problem.A₂ E₁) x₂')
+      _ = admm.A₁ ((admm.x₁ (n+1)) - admm.x₁') + admm.A₂ ((admm.x₂ (n+1)) - admm.x₂') := by simp only [map_sub]
+      _ = admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1)) := by rw [e₁, e₂]
 
---lsr gyq
---书430 (8.6.43)
-/-
-Thereoms
 
-- theorem ContinuousLinearMap.adjoint_inner_left from https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/InnerProductSpace/Adjoint.html#ContinuousLinearMap.adjoint
--
+lemma Φ_isdescending_eq3' : ∀ n : ℕ+ , admm.A₁ (admm.x₁ n) + admm.A₂ (admm.x₂ n) - admm.b
+= admm.A₁ (admm.e₁ n) + admm.A₂ (admm.e₂ n) := by
+   intro n
+   have := Φ_isdescending_eq3 admm n.natPred
+   have h: n = n.natPred+1 := by
+      simp only [PNat.natPred_add_one]
+   rw[← h] at this
+   exact this
 
--/
+
 lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1)))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
 + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) ≥ 0 := sorry
 
-
 #check neg_sub
 #check neg_mul_eq_neg_mul
-lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ * admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))  -- part 1
+#check neg_mul_eq_mul_neg
+#check InnerProductSpace.Core.inner_add_right
+#check InnerProductSpace.Core.inner_neg_left
+#check real_inner_smul_right
+
+lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ * admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2
--- part 2
 + admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
 -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) ) ≥ 0 := by
-   -- part1: (τρ)⁻¹<e_y^{n+1},(e_y^{n}-e_y^{n+1})> = <e_y^{n+1},-(A_1e_1^{n+1}+A_2e_2^{n+1})>
-   -- part1.1: (τρ)⁻¹(e_y^{n}-e_y^{n+1}) = -(A_1x_1^{n+1}+A_2x_2^{n+1}-b)
-   have part1: ∀ n , 1/(admm.τ * admm.ρ) * (ADMM.ey n)-(ADMM.ey (n+1)) = -(admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b) := by  -- eq1 and eq2
+
+   let pm1 := 1/(admm.τ * admm.ρ)
+
+   #check (pm1 : ℝ)
+
+   have h1: ∀ n , 1/(admm.τ * admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1)))) = (inner (admm.ey (n + 1)) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))) := by
       intro n
       calc
-      -- -(A_1x_1^{n+1}+A_2x_2^{n+1}-b) = -(A_1e_1^{n+1}+A_2e_2^{n+1})
-         1/(admm.τ * admm.ρ) * (ADMM.ey n)-(ADMM.ey (n+1)) = - (1/(admm.τ * admm.ρ) * (ADMM.ey (n+1))-(ADMM.ey n)) := by
-            rw [← neg_sub (ADMM.ey (n+1)) (ADMM.ey n)]
-            simp
-         _ =  -(admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b) := by
+         _ = (inner (ADMM.ey (n+1)) ( pm1 * ((ADMM.ey n)-(ADMM.ey (n+1))) )) := by
+            rw [← real_inner_smul_right _ _ pm1]
+         _ = (inner (ADMM.ey (n+1)) ( pm1 * -((ADMM.ey (n+1))-(ADMM.ey n)) )) := by
+            rw [← neg_sub (ADMM.ey (n+1)) _]
+         _ = (inner (ADMM.ey (n+1)) ( -pm1 * ((ADMM.ey (n+1))-(ADMM.ey n)) )) := by
+            rw [← neg_mul_eq_mul_neg pm1 ((ADMM.ey (n+1))-(ADMM.ey n))]
+         _ = (inner (ADMM.ey (n+1)) (-(admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))) := by
             rw [← Φ_isdescending_eq2, ← Φ_isdescending_eq1]
-         _ = - (admm.A₁ (ADMM.e₁ (n+1)) + admm.A₂ (ADMM.e₂ (n+1))) := by
+         _ = (inner (ADMM.ey (n+1)) (-(admm.A₁ (ADMM.e₁ (n+1)) + admm.A₂ (ADMM.e₂ (n+1))))) := by
             rw [Φ_isdescending_eq3]
-   -- part2: ρ<A_2(x_2^{n+1}-x_2^n),A_1x_1^{n+1}+A_2x_2^{n+1}-b> - ρ<A_2(x_2^{n+1}-x_2^n),A_2e_2^{n+1}>
-   --        = ρ<-A_2(x_2^n-x_2^{n+1})),A_1e_1^{n+1}>
-   have part2: ∀ n , admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
+      -- sorry
+
+   have h2: ∀ n , (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2 = (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2 := by
+      intro n
+      rw [Φ_isdescending_eq3]
+
+   have h3: ∀ n ,admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
    -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) )
    =  admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) := by
       intro n
+      calc
+         admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
+         -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) )
+         = - (admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
+         + admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) )) := by
+            rw [InnerProductSpace.Core.inner_neg_left (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) _ ]
+            field_simp
+         _ = - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b + admm.A₂ (admm.e₂ (n+1)))) := by
+            rw [← InnerProductSpace.Core.inner_add_right]
+         _ = - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.e₁ (n+1)))) := by
+            have h := by simp [Φ_isdescending_eq3 admm n]
+            apply h
+      -- sorry
+
+   rw [h1, h2, h3]
    exact expended_u_v_gt_zero
 
 --xzx dyx
