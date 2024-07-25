@@ -255,10 +255,13 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
          rw [sub_eq_add_neg, add_assoc (τ * ρ) (-ρ) ρ, add_comm (-ρ) ρ, add_neg_self, add_zero, add_neg_self, zero_smul]
       rw [sub]
    _ =
+         inner (-ey' - ((1 - τ) * ρ) • A_e_sum) (Ae1 + Ae2)
+      + ρ * (inner A_x_sum Ae1) := by rfl
+   _ =
         inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
       + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
       + ρ * (inner A_x_sum Ae1) := by
-      rw [add_right]
+      rw [inner_add_right]
    _ =
         inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
       + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
