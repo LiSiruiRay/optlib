@@ -228,7 +228,6 @@ lemma substitution2 : ∀ n , admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂
    have h := Φ_isdescending_eq3 admm n
    simp [h]
 
-example {a b : ℝ } : a + (- b)=a-b:= rfl
 lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ * admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2
 + admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
@@ -257,8 +256,7 @@ lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ * admm.ρ) * (inner (admm.ey (
    have h2:  (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2 = (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2 := by
       rw [Φ_isdescending_eq3]
 
-   have h3: admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
-   -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) )
+   have h3: admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b)) -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) )
    =  admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) := by
 
       calc admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
@@ -290,14 +288,18 @@ lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ * admm.ρ) * (inner (admm.ey (
          _ = - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b - admm.A₂ (admm.e₂ (n+1)))) := by
             rw [← neg_sub (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b) (admm.A₂ (admm.e₂ (n+1)))]
             rw [inner_neg_right]
-            simp
+            simp only [map_sub, mul_neg, neg_mul]
 
          _ = - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.e₁ (n+1)))) := by
             rw [substitution2]
 
-   rw [h1 , h2]
-   rw [h3]
+         _ = admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) := by
+            rw [neg_mul (admm.ρ) (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1))))]
+            rw [← mul_neg]
+            rw [← inner_neg_left (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.e₁ (n+1)))]
 
+   rw [h1, h2]
+   rw [h3]
    exact expended_u_v_gt_zero
 
 --xzx dyx
