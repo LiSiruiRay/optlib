@@ -239,16 +239,8 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       have sub:
          -ey' + (τ * ρ - ρ) • A_e_sum = -ey' - (-(τ * ρ) + ρ) • A_e_sum
          := by
-         -- apply?
          rw [← sub_eq_zero]
-         -- rw [sub_self]
          rw [sub_eq_add_neg]
-         #check (-ey' - (-(τ * ρ) + ρ) • A_e_sum)
-         #check neg_one_smul
-         #check neg_one_mul
-         #check sub_eq_add_neg
-         #check one_smul_eq_id
-         let result_vec := (-ey' - (-(τ * ρ) + ρ) • A_e_sum)
          rw [sub_eq_add_neg (G := F) (-ey') ((-(τ * ρ) + ρ) • A_e_sum)]
          rw [← neg_one_smul (R := ℝ) (-ey' + -((-(τ * ρ) + ρ) • A_e_sum))]
          rw [smul_add (-1)  (-ey') (-((-(τ * ρ) + ρ) • A_e_sum))]
@@ -258,31 +250,10 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
          rw [add_comm ey' ((-(τ * ρ) + ρ) • A_e_sum)]
          rw [add_assoc]
          rw [add_neg_self, add_zero]
-         -- have h_sub_sub: (τ * ρ - ρ) = -(-(τ * ρ) + ρ) := by
-         --    ring
-         -- rw [h_sub_sub, add_comm, ← smul_assoc, add_neg_self]
          rw [← add_smul (τ * ρ - ρ) (-(τ * ρ) + ρ) (A_e_sum)]
          rw [add_comm (-(τ * ρ)) ρ, ← add_assoc]
          rw [sub_eq_add_neg, add_assoc (τ * ρ) (-ρ) ρ, add_comm (-ρ) ρ, add_neg_self, add_zero, add_neg_self, zero_smul]
-
-
-         -- rw [← neg_one_smul (R := ℝ) (ey')]
-         -- rw [← neg_one_smul (R := ℝ) ((-(τ * ρ) + ρ) • A_e_sum)]
-         -- -- rw [← neg_smul_neg]
-         -- rw [← smul_assoc, ← smul_assoc]
-         -- rw [← neg_one_mul]
-
-
-
-         -- rw [sub_eq_add_neg (G := F) (-ey') (-(τ * ρ) + ρ) • A_e_sum]
-
-         -- rw [← neg_one_smul ℝ ((-(τ * ρ) + ρ) • A_e_sum)]
-
-      -- rw [neg_add  (-(τ * ρ))  ρ]
-
-      -- rw [← neg_one_mul_add (-(τ * ρ) + ρ)]
-      -- rw [neg_neg (- (-(τ * ρ) + ρ))]
-      -- rfl
+      rw [sub]
    _ =
         inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
       + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
@@ -311,20 +282,7 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
 #check sub_self
 #check sub_eq_sub_iff_sub_eq_sub
 #check neg_smul_neg
--- #check
 
-
-               -- exact
-
-   -- have h₂:
-
-   --    (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
-   --    - ((1-admm.τ) * admm.ρ) * inner (𝕜:=ℝ) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
-   --    + admm.ρ * (inner (𝕜:=ℝ) (A_x_sum) (admm.A₁ (e₁ (n+1))))
-   --    = (inner (𝕜:=ℝ) (ey (n + 1)) (-((admm.A₁ (e₁ (n + 1))) + admm.A₂ (e₂ (n + 1)))))
-   --       -  inner (𝕜:=ℝ) ( ((1-admm.τ) * admm.ρ) • admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1))) (admm.A₁ (e₁ (n+1)) + admm.A₂ (e₂ (n+1)))
-   --       + admm.ρ * (inner (𝕜:=ℝ) (A_x_sum) (admm.A₁ (e₁ (n+1)))) :=
-   --       smul_left
 
 #check smul_left
 lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ*admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
