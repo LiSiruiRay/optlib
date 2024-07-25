@@ -236,13 +236,40 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       + ρ * (inner A_x_sum Ae1) := by
       rw [← add_left]
       ring
-      have sub: -ey' + (τ * ρ - ρ) • A_e_sum = -ey' - (-(τ * ρ) + ρ) • A_e_sum := by
+      have sub:
+         -ey' + (τ * ρ - ρ) • A_e_sum = -ey' - (-(τ * ρ) + ρ) • A_e_sum
+         := by
+         -- apply?
+         rw [← sub_eq_zero]
+         -- rw [sub_self]
+         rw [sub_eq_add_neg]
+         #check (-ey' - (-(τ * ρ) + ρ) • A_e_sum)
+         #check neg_one_smul
+         #check neg_one_mul
+         #check sub_eq_add_neg
+         let result_vec := (-ey' - (-(τ * ρ) + ρ) • A_e_sum)
+         rw [sub_eq_add_neg (G := F) (-ey') ((-(τ * ρ) + ρ) • A_e_sum)]
+         rw [← neg_one_smul (R := ℝ) (-ey' + -((-(τ * ρ) + ρ) • A_e_sum))]
+         rw [smul_add (-1)  (-ey') (-((-(τ * ρ) + ρ) • A_e_sum))]
+         rw [neg_smul_neg, neg_smul_neg]
+         rw [one_smul_eq_id]
+         -- rw [← neg_one_smul (R := ℝ) (ey')]
+         -- rw [← neg_one_smul (R := ℝ) ((-(τ * ρ) + ρ) • A_e_sum)]
+         -- -- rw [← neg_smul_neg]
+         -- rw [← smul_assoc, ← smul_assoc]
+         -- rw [← neg_one_mul]
+
+
+
+         -- rw [sub_eq_add_neg (G := F) (-ey') (-(τ * ρ) + ρ) • A_e_sum]
+
+         -- rw [← neg_one_smul ℝ ((-(τ * ρ) + ρ) • A_e_sum)]
 
       -- rw [neg_add  (-(τ * ρ))  ρ]
-      apply?
+
       -- rw [← neg_one_mul_add (-(τ * ρ) + ρ)]
       -- rw [neg_neg (- (-(τ * ρ) + ρ))]
-      rfl
+      -- rfl
    _ =
         inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
       + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
@@ -264,6 +291,15 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
 #check inner_neg_left
 #check add_neg
 #check neg_add
+#check smul_assoc
+#check add_neg
+#check sub_eq_add_neg
+#check self_eq_neg
+#check sub_self
+#check sub_eq_sub_iff_sub_eq_sub
+#check neg_smul_neg
+-- #check
+
 
                -- exact
 
