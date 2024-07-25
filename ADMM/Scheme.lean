@@ -247,12 +247,25 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
          #check neg_one_smul
          #check neg_one_mul
          #check sub_eq_add_neg
+         #check one_smul_eq_id
          let result_vec := (-ey' - (-(τ * ρ) + ρ) • A_e_sum)
          rw [sub_eq_add_neg (G := F) (-ey') ((-(τ * ρ) + ρ) • A_e_sum)]
          rw [← neg_one_smul (R := ℝ) (-ey' + -((-(τ * ρ) + ρ) • A_e_sum))]
          rw [smul_add (-1)  (-ey') (-((-(τ * ρ) + ρ) • A_e_sum))]
          rw [neg_smul_neg, neg_smul_neg]
-         rw [one_smul_eq_id]
+         rw [one_smul, one_smul]
+         rw [add_assoc, add_comm, add_assoc]
+         rw [add_comm ey' ((-(τ * ρ) + ρ) • A_e_sum)]
+         rw [add_assoc]
+         rw [add_neg_self, add_zero]
+         -- have h_sub_sub: (τ * ρ - ρ) = -(-(τ * ρ) + ρ) := by
+         --    ring
+         -- rw [h_sub_sub, add_comm, ← smul_assoc, add_neg_self]
+         rw [← add_smul (τ * ρ - ρ) (-(τ * ρ) + ρ) (A_e_sum)]
+         rw [add_comm (-(τ * ρ)) ρ, ← add_assoc]
+         rw [sub_eq_add_neg, add_assoc (τ * ρ) (-ρ) ρ, add_comm (-ρ) ρ, add_neg_self, add_zero, add_neg_self, zero_smul]
+
+
          -- rw [← neg_one_smul (R := ℝ) (ey')]
          -- rw [← neg_one_smul (R := ℝ) ((-(τ * ρ) + ρ) • A_e_sum)]
          -- -- rw [← neg_smul_neg]
