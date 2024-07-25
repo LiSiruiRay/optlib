@@ -273,8 +273,8 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       rw [add_assoc]
       rw [inner_smul_left A_x_sum Ae1 ρ, starRingEnd_eq_R, add_comm]
       ring
-   _ = 5 := sorry
-   _ ≥ 0 := sorry
+   _ ≥ 0 := by sorry
+      -- rw [expended_u_gt_zero]
 
 #check neg_one_mul
 #check admm.A₁ (admm.e₁ (1))
