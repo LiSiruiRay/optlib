@@ -262,15 +262,19 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
       + ρ * (inner A_x_sum Ae1) := by
       rw [inner_add_right]
+   -- _ =
+   --      inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
+   --    + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
+   --    + ρ * (inner A_x_sum Ae1) := by rfl
    _ =
         inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
-      + inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae1
-      + ρ * (inner A_x_sum Ae1) := by rfl
-   _ =
-        inner (-ey' - ((1 - τ) * ρ) • A_e_sum) Ae2
-      + inner (-ey' - ((1 - τ) * ρ) • A_e_sum + ρ • A_x_sum) Ae1 := by rfl
-   _
-   ≥ 0 := sorry
+      + inner (-ey' - ((1 - τ) * ρ) • A_e_sum + ρ • A_x_sum) Ae1 := by
+      rw [inner_add_left]
+      rw [add_assoc]
+      rw [inner_smul_left A_x_sum Ae1 ρ, starRingEnd_eq_R, add_comm]
+      ring
+   _ = 5 := sorry
+   _ ≥ 0 := sorry
 
 #check neg_one_mul
 #check admm.A₁ (admm.e₁ (1))
