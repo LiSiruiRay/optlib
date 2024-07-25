@@ -208,10 +208,27 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-((admm.A₁ (adm
 #check neg_sub
 #check neg_mul_eq_neg_mul
 #check neg_mul_eq_mul_neg
-#check InnerProductSpace.Core.inner_add_right
-#check InnerProductSpace.Core.inner_neg_left
+#check inner_add_right
+#check inner_sub_right
+#check inner_neg_left
 #check real_inner_smul_right
+#check map_neg
+#check neg_sub_left
 
+lemma substitution1 : ∀ n , - admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) ) = admm.ρ * (inner (admm.A₂ (admm.x₂ n - admm.x₂ (n+1))) (admm.A₂ (admm.e₂ (n+1))) ) := by
+   intro n
+   rw [neg_mul (admm.ρ) (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))))]
+   rw [← mul_neg]
+   rw [← inner_neg_left (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1)))]
+   rw [← map_neg admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)]
+   rw [neg_sub (admm.x₂ (n+1)) (admm.x₂ n)]
+
+lemma substitution2 : ∀ n , admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b - admm.A₂ (admm.e₂ (n+1)) = admm.A₁ (admm.e₁ (n+1)) := by
+   intro n
+   have h := Φ_isdescending_eq3 admm n
+   simp [h]
+
+example {a b : ℝ } : a + (- b)=a-b:= rfl
 lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ * admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2
 + admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
@@ -221,44 +238,66 @@ lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ * admm.ρ) * (inner (admm.ey (
 
    #check (pm1 : ℝ)
 
-   have h1: ∀ n , 1/(admm.τ * admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1)))) = (inner (admm.ey (n + 1)) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))) := by
-      intro n
-      calc
-         _ = (inner (ADMM.ey (n+1)) ( pm1 * ((ADMM.ey n)-(ADMM.ey (n+1))) )) := by
-            rw [← real_inner_smul_right _ _ pm1]
-         _ = (inner (ADMM.ey (n+1)) ( pm1 * -((ADMM.ey (n+1))-(ADMM.ey n)) )) := by
-            rw [← neg_sub (ADMM.ey (n+1)) _]
-         _ = (inner (ADMM.ey (n+1)) ( -pm1 * ((ADMM.ey (n+1))-(ADMM.ey n)) )) := by
-            rw [← neg_mul_eq_mul_neg pm1 ((ADMM.ey (n+1))-(ADMM.ey n))]
-         _ = (inner (ADMM.ey (n+1)) (-(admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))) := by
-            rw [← Φ_isdescending_eq2, ← Φ_isdescending_eq1]
-         _ = (inner (ADMM.ey (n+1)) (-(admm.A₁ (ADMM.e₁ (n+1)) + admm.A₂ (ADMM.e₂ (n+1))))) := by
-            rw [Φ_isdescending_eq3]
-      -- sorry
+   intro n
 
-   have h2: ∀ n , (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2 = (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2 := by
-      intro n
+   have h1:  1/(admm.τ * admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
+      = (inner (admm.ey (n + 1)) (-((admm.A₁ (admm.e₁ (n + 1))) + admm.A₂ (admm.e₂ (n + 1))))) := by
+      calc  1/(admm.τ * admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
+         _ = (inner (admm.ey (n+1)) ( pm1 • ((admm.ey n)-(admm.ey (n+1))) )) := by
+            rw [← real_inner_smul_right (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))) pm1]
+         _ = (inner (admm.ey (n+1)) ( pm1 • -((admm.ey (n+1))-(admm.ey n)) )) := by
+            rw [← neg_sub (admm.ey (n+1)) (admm.ey n)]
+         _ = (inner (admm.ey (n+1)) ( -(pm1 • ((admm.ey (n+1))-(admm.ey n))) )) := by
+            rw [smul_neg]
+         _ = (inner (admm.ey (n+1)) ( -(admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b) )) := by
+            rw [← Φ_isdescending_eq2, ← Φ_isdescending_eq1]
+         _ = (inner (admm.ey (n+1)) (-(admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))))) := by
+            rw [Φ_isdescending_eq3]
+
+   have h2:  (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2 = (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2 := by
       rw [Φ_isdescending_eq3]
 
-   have h3: ∀ n ,admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
+   have h3: admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
    -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) )
    =  admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) := by
-      intro n
-      calc
-         admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
-         -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) )
-         = - (admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
-         + admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) )) := by
-            rw [InnerProductSpace.Core.inner_neg_left (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) _ ]
-            field_simp
-         _ = - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b + admm.A₂ (admm.e₂ (n+1)))) := by
-            rw [← InnerProductSpace.Core.inner_add_right]
-         _ = - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.e₁ (n+1)))) := by
-            have h := by simp [Φ_isdescending_eq3 admm n]
-            apply h
-      -- sorry
 
-   rw [h1, h2, h3]
+      calc admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
+         -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) )
+
+         _ = admm.ρ * (inner (- (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1)))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
+         - admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) ) := by
+            rw [← neg_sub (admm.x₂ n) (admm.x₂ (n+1))]
+            rw [map_neg admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))]
+
+         _ = - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
+         - admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) ) := by
+            rw [inner_neg_left (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b)]
+            simp
+
+         _ = - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
+         + admm.ρ * (inner (admm.A₂ (admm.x₂ n - admm.x₂ (n+1))) (admm.A₂ (admm.e₂ (n+1))) ) := by
+            rw [← substitution1 admm]
+            simp only [map_sub, neg_mul];rfl
+
+         _ = admm.ρ * (inner (admm.A₂ (admm.x₂ n - admm.x₂ (n+1))) (admm.A₂ (admm.e₂ (n+1))) )
+         - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b)) := by
+            ring
+
+         _ = admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₂ (admm.e₂ (n+1)) - (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))):= by
+            rw [← mul_sub]
+            rw [← inner_sub_right (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₂ (admm.e₂ (n+1))) ((admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))]
+
+         _ = - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b - admm.A₂ (admm.e₂ (n+1)))) := by
+            rw [← neg_sub (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b) (admm.A₂ (admm.e₂ (n+1)))]
+            rw [inner_neg_right]
+            simp
+
+         _ = - admm.ρ * (inner (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))) (admm.A₁ (admm.e₁ (n+1)))) := by
+            rw [substitution2]
+
+   rw [h1 , h2]
+   rw [h3]
+
    exact expended_u_v_gt_zero
 
 --xzx dyx
