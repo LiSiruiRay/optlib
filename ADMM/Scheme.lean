@@ -189,13 +189,19 @@ lemma expended_v_gt_zero : ∀ n, (0 : ℝ) ≤ (
 )  := sorry
 
 lemma starRingEnd_eq_R (x : ℝ) : (starRingEnd ℝ) x = x := rfl
+-- #eval Real.sqrt (4 : ℝ)
+def plus_one : Nat → Nat
+   | x => x + 1
 
-#check starRingEnd_self_apply
-#check starRingEnd ℝ
+#eval plus_one 5
+
+lemma test_test : Real.sqrt (4 : ℝ) = 2 := by
+   norm_num
 
 lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1)))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
 + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) ≥ 0 := by
+   -- this proof has no beauty of
    intro n
    #check inner (E:=ℝ)
    #check norm_sq_eq_inner
