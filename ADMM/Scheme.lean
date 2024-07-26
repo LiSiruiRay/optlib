@@ -171,14 +171,14 @@ lemma subgradientAt_mono_u : ∀ n, (inner (admm.u (n + 1) + (ContinuousLinearMa
 
 lemma subgradientAt_mono_v : ∀ n, (inner (admm.v (n + 1) + (ContinuousLinearMap.adjoint admm.A₂) admm.y') (admm.x₂ (n + 1) - admm.x₂')) ≥ (0 : ℝ) := sorry
 
-lemma expended_u_gt_zero : ∀ n, (inner
+lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (inner
    (
       -admm.ey (n + 1) - ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1)))
       - (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))))
    )
-   (admm.A₁ (admm.e₁ (n + 1)))) ≥ (0: ℝ) := sorry
+   (admm.A₁ (admm.e₁ (n + 1)))) := sorry
 
-lemma expended_v_gt_zero : ∀ n, (
+lemma expended_v_gt_zero : ∀ n, (0 : ℝ) ≤ (
    inner (
       -admm.ey (n + 1)
       - ((1 - admm.τ) * admm.ρ) •
@@ -186,7 +186,7 @@ lemma expended_v_gt_zero : ∀ n, (
    ) (
       admm.A₂ (admm.e₂ (n + 1))
    )
-) ≥ (0 : ℝ) := sorry
+)  := sorry
 
 lemma starRingEnd_eq_R (x : ℝ) : (starRingEnd ℝ) x = x := rfl
 
@@ -301,8 +301,10 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
          rw [← neg_one_smul (R := ℝ) (ADMM.ρ E₁ E₂ F • ((Opt_problem.A₂ E₁) (x₂ E₁ F n) - (Opt_problem.A₂ E₁) (x₂ E₁ F (n + 1))))]
          rw [sub]
          simp only [Int.reduceNeg, neg_smul, one_smul]
-   _ ≥ 0 := by sorry
-      -- rw [expended_u_gt_zero]
+   _ ≥ 0 := by
+      apply add_nonneg
+      apply expended_v_gt_zero
+      apply expended_u_gt_zero
 
 #check neg_one_mul
 #check admm.A₁ (admm.e₁ (1))
@@ -318,6 +320,7 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
 #check sub_eq_sub_iff_sub_eq_sub
 #check neg_smul_neg
 #check ContinuousLinearMap.restrictScalarsL
+#check add_gt
 -- #check
 
 #check smul_left
