@@ -168,6 +168,13 @@ Thereoms
 
 -/
 --------------- 书430 (8.6.43) ---------------
+def au := admm.u
+def v := admm.v
+def τ := admm.τ
+def ρ := admm.ρ
+def Ae1 (n : Nat) := (admm.A₁ (admm.e₁ (n)))
+def Ae2 (n : Nat) := (admm.A₂ (admm.e₂ (n)))
+
 lemma subgradientAt_mono_u : ∀ n, (inner (admm.u (n + 1) + (ContinuousLinearMap.adjoint admm.A₁) admm.y') (admm.x₁ (n + 1) - admm.x₁')) ≥ (0 : ℝ) := sorry
 
 lemma subgradientAt_mono_v : ∀ n, (inner (admm.v (n + 1) + (ContinuousLinearMap.adjoint admm.A₂) admm.y') (admm.x₂ (n + 1) - admm.x₂')) ≥ (0 : ℝ) := sorry
