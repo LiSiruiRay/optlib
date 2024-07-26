@@ -167,6 +167,7 @@ Thereoms
 - subgradientAt_mono
 
 -/
+--------------- 书430 (8.6.43) ---------------
 lemma subgradientAt_mono_u : ∀ n, (inner (admm.u (n + 1) + (ContinuousLinearMap.adjoint admm.A₁) admm.y') (admm.x₁ (n + 1) - admm.x₁')) ≥ (0 : ℝ) := sorry
 
 lemma subgradientAt_mono_v : ∀ n, (inner (admm.v (n + 1) + (ContinuousLinearMap.adjoint admm.A₂) admm.y') (admm.x₂ (n + 1) - admm.x₂')) ≥ (0 : ℝ) := sorry
@@ -189,19 +190,11 @@ lemma expended_v_gt_zero : ∀ n, (0 : ℝ) ≤ (
 )  := sorry
 
 lemma starRingEnd_eq_R (x : ℝ) : (starRingEnd ℝ) x = x := rfl
--- #eval Real.sqrt (4 : ℝ)
-def plus_one : Nat → Nat
-   | x => x + 1
-
-#eval plus_one 5
-
-lemma test_test : Real.sqrt (4 : ℝ) = 2 := by
-   norm_num
 
 lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1)))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.e₁ (n+1)) + admm.A₂ (admm.e₂ (n+1))‖^2
 + admm.ρ * (inner (-admm.A₂ (admm.x₂ (n) - admm.x₂ (n + 1))) (admm.A₁ (admm.e₁ (n+1)))) ≥ 0 := by
-   -- this proof has no beauty of
+   -- this proof has no beauty of math, pure shit
    intro n
    #check inner (E:=ℝ)
    #check norm_sq_eq_inner
@@ -318,6 +311,7 @@ lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ*admm.ρ) * (inner (admm.ey (n+
 + admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
 -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) ) ≥ 0:= sorry
 
+---------------    书430 (8.6.43) end    ---------------
 --xzx dyx
 --书431 第五行
 lemma A'υ_inthesubgradient :∀ n , (- (ContinuousLinearMap.adjoint admm.A₂) ((admm.υ) n)) ∈ SubderivAt admm.f₂ (admm.x₂ n):= sorry
