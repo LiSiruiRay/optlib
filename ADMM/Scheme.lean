@@ -273,6 +273,34 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       rw [add_assoc]
       rw [inner_smul_left A_x_sum Ae1 ρ, starRingEnd_eq_R, add_comm]
       ring
+   _ =
+      (inner
+         (
+            -admm.ey (n + 1)
+            - ((1 - admm.τ) * admm.ρ) •
+               ((admm.A₁ (admm.e₁ (n + 1))) + (admm.A₂ (admm.e₂ (n + 1))))
+         )
+         (admm.A₂ (admm.e₂ (n + 1)))
+      )
+      +
+      (inner
+         (
+            -admm.ey (n + 1) - ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1)))
+            - (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))))
+         )
+         (admm.A₁ (admm.e₁ (n + 1))))
+
+       := by
+         have sub : admm.ρ • (admm.A₂ (admm.x₂ (n + 1)) - admm.A₂ (admm.x₂ (n))) = -1 • admm.ρ • (admm.A₂ (admm.x₂ (n)) - admm.A₂ (admm.x₂ (n + 1))) := by
+               rw [smul_comm]
+               rw [neg_one_smul]
+               -- rw [← map_neg]
+               rw [neg_sub]
+         simp[ey', ey, τ, ρ, A_e_sum, Ae2, A_x_sum, Ae1]
+         nth_rw 5 [sub_eq_add_neg]
+         rw [← neg_one_smul (R := ℝ) (ADMM.ρ E₁ E₂ F • ((Opt_problem.A₂ E₁) (x₂ E₁ F n) - (Opt_problem.A₂ E₁) (x₂ E₁ F (n + 1))))]
+         rw [sub]
+         simp only [Int.reduceNeg, neg_smul, one_smul]
    _ ≥ 0 := by sorry
       -- rw [expended_u_gt_zero]
 
@@ -289,7 +317,8 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
 #check sub_self
 #check sub_eq_sub_iff_sub_eq_sub
 #check neg_smul_neg
-
+#check ContinuousLinearMap.restrictScalarsL
+-- #check
 
 #check smul_left
 lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ*admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
