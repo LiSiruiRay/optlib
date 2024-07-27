@@ -192,13 +192,23 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
    let u' := - A₁' (admm.y (n + 1) + ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1)))
          + (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1)))))
    let Aty' := A₁' admm.y' -- A_1^T y*
-   let x_diff := admm.x₂ (n) - admm.x₂ (n+1)
+   let x_diff := admm.x₁ (n + 1) - admm.x₁'
    calc
       _= inner (𝕜 := ℝ) block Ae1 := by rfl
       _= inner (A₁' block) (e') := by
          rw [ContinuousLinearMap.adjoint_inner_left]
-      -- _=
-      _≥ 0 := sorry
+      _= inner (u' + Aty') (x_diff) := by
+         simp[block]
+         have sub : ey (n + 1) = (admm.y (n + 1)) - admm.y' := by rfl
+         rw [sub]
+         simp
+         have sub₂ : admm.e₁ (n + 1) = e' := by rfl
+         rw [sub₂]
+         have sub₃ : Aty' = A₁' admm.y' := by rfl
+         rw [← sub₃]
+         have sub₄ : u' = - A₁' (admm.y (n + 1) + ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1))) := by rfl
+         rw [sub₄]
+      _≥ 0 := by apply subgradientAt_mono_u
 
 
 
