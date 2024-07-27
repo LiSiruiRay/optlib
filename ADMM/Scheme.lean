@@ -184,8 +184,14 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
    let A₁' := (ContinuousLinearMap.adjoint admm.A₁)
    let Ae1 := admm.A₁ (admm.e₁ (n + 1))
    let e' := admm.e₁ (n + 1)
+   -- block is the first part of the inner product
+   -- block = u^{k + 1} + A_1^{T}y*
    let block := -admm.ey (n + 1) - ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1))) - (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))))
-   let block₁ =
+
+   -- u^{k + 1}
+   let u' := - A₁' (admm.y (n + 1) + ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1)))
+         + (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1)))))
+   let Aty' := A₁' admm.y' -- A_1^T y*
    let x_diff := admm.x₂ (n) - admm.x₂ (n+1)
    calc
       _= inner (𝕜 := ℝ) block Ae1 := by rfl
