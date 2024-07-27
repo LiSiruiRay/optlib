@@ -198,7 +198,7 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
       _= inner (A₁' block) (e') := by
          rw [ContinuousLinearMap.adjoint_inner_left]
       _= inner (u' + Aty') (x_diff) := by
-         let block₁ := admm.y (n + 1) + ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1))) - (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))))
+         let block₁ := admm.y (n + 1) + ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1))) + (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))))
          let block₂ := admm.y'
          have split_block : -block = block₁ - block₂ := by
             simp[block, block₁, block₂]
@@ -212,12 +212,37 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
             rw [add_assoc]
             rw [← smul_add]
             rw [smul_sub]
-            let A := ((1 - admm.τ) * admm.ρ) • ((admm.A₁) (admm.e₁ (n + 1)))
-            let B := ((1 - admm.τ) * admm.ρ) • (admm.A₂) (admm.e₂ (n + 1))
+            -- simp
+
+            let A := ((1 - admm.τ) * admm.ρ) • ((admm.A₁) (admm.e₁ (n + 1)) + (admm.A₂) (admm.e₂ (n + 1)))
+            -- let B := ((1 - admm.τ) * admm.ρ) • (admm.A₂) (admm.e₂ (n + 1))
             let C := admm.y (n + 1)
             let D := admm.ρ • ((admm.A₂) (admm.x₂ n))
             let E := admm.ρ • ((admm.A₂) (admm.x₂ (n + 1)))
-            change A + B + (C - y' + D) = C + (A + B) + D - y'
+            change A + (C - y' + (D - E)) = C + A + (D - E) - y'
+            -- simp [sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
+            rw [← add_assoc]
+            rw [sub_eq_add_neg]
+            rw [← add_assoc]
+            rw [add_comm A C]
+            rw [add_assoc]
+            rw [add_comm (-y') (D - E)]
+            rw [← add_assoc]
+            rw [← sub_eq_add_neg]
+
+         rw [← neg_neg block]
+         rw [split_block]
+         rw [neg_sub]
+         rw [A₁'.map_sub]
+
+            -- rw [add_comm A (C - y')]
+            -- rw [add_assoc]
+            -- rw [add_comm A (D - E)]
+            -- rw [← add_assoc]
+            -- rw [add_comm C A]
+            -- rw [← add_assoc]
+            -- rw [add_assoc (C + A)]
+            -- rw [add_comm (D - E)]
             -- change
 
             -- triv
