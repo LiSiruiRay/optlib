@@ -198,20 +198,59 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
       _= inner (A₁' block) (e') := by
          rw [ContinuousLinearMap.adjoint_inner_left]
       _= inner (u' + Aty') (x_diff) := by
-         simp[block]
-         have sub : ey (n + 1) = (admm.y (n + 1)) - admm.y' := by rfl
-         rw [sub]
-         simp
-         have sub₂ : admm.e₁ (n + 1) = e' := by rfl
-         rw [sub₂]
-         have sub₃ : Aty' = A₁' admm.y' := by rfl
-         rw [← sub₃]
-         have sub₄ : u' = - A₁' (admm.y (n + 1) + ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1))) := by rfl
-         rw [sub₄]
-      _≥ 0 := by apply subgradientAt_mono_u
+         let block₁ := admm.y (n + 1) + ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1))) - (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))))
+         let block₂ := admm.y'
+         have split_block : -block = block₁ - block₂ := by
+            simp[block, block₁, block₂]
+            have split_ey :  ey (n + 1) = (admm.y (n + 1)) - admm.y' := by rfl
+            rw [split_ey]
+            simp
+            rw [sub_eq_add_neg]
+            rw [neg_sub (admm.y' - admm.y (n + 1))]
+            rw [add_comm]
+            rw [sub_eq_add_neg, neg_sub]
+            rw [add_assoc]
+            rw [← smul_add]
+            rw [smul_sub]
+            let A := ((1 - admm.τ) * admm.ρ) • ((admm.A₁) (admm.e₁ (n + 1)))
+            let B := ((1 - admm.τ) * admm.ρ) • (admm.A₂) (admm.e₂ (n + 1))
+            let C := admm.y (n + 1)
+            let D := admm.ρ • ((admm.A₂) (admm.x₂ n))
+            let E := admm.ρ • ((admm.A₂) (admm.x₂ (n + 1)))
+            change A + B + (C - y' + D) = C + (A + B) + D - y'
+            -- change
+
+            -- triv
+            -- simp_arith
+            -- simp
+            -- rfl
+            -- simp?
+            -- apply?
+            -- rw [add_assoc]
+            -- ring
+            -- rfl
+            -- simp
+            -- ring
+            -- rfl
+            -- rfl
+         -- simp[block]
+         -- have sub : ey (n + 1) = (admm.y (n + 1)) - admm.y' := by rfl
+         -- rw [sub]
+         -- simp
+         -- have sub₂ : admm.e₁ (n + 1) = e' := by rfl
+         -- rw [sub₂]
+         -- have sub₃ : Aty' = A₁' admm.y' := by rfl
+         -- rw [← sub₃]
+         -- have sub₄ : u' = - A₁' (admm.y (n + 1) + ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1))) + (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))))) := by rfl
+         -- rw [sub₄]
+         -- simp
+         -- ring
+         -- rfl
+         -- ring
+      _≥ 0 := by sorry --apply subgradientAt_mono_u
 
 
-
+#check add_assoc
 
 lemma expended_v_gt_zero : ∀ n, (0 : ℝ) ≤ (
    inner (
