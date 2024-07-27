@@ -245,6 +245,11 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
             simp[block₁]
             rw [← smul_neg, neg_sub]
             rw [smul_sub]
+         have Aty'_eq : A₁' block₂ = Aty' := by
+            rfl
+         rw [← u'_eq, Aty'_eq, add_comm, sub_eq_add_neg]
+         simp[e', x_diff]
+         rfl
             -- simp
             -- rw [, ← A₁'.map_neg]
             -- rw [(-A₁').map_add]
