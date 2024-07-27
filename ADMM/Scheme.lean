@@ -234,7 +234,21 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
          rw [split_block]
          rw [neg_sub]
          rw [A₁'.map_sub]
-
+         have u'_eq : - A₁' block₁ = u' := by
+            simp[u']
+            rw [← A₁'.map_smul, ← A₁'.map_smul]
+            rw [smul_sub]
+            rw [← A₁'.map_smul, ← A₁'.map_smul]
+            rw [← A₁'.map_sub]
+            rw [← A₁'.map_neg, ← A₁'.map_neg, ← A₁'.map_neg, ← A₁'.map_neg, ← A₁'.map_neg]
+            rw [← A₁'.map_add, ← A₁'.map_add, ← A₁'.map_add]
+            simp[block₁]
+            rw [← smul_neg, neg_sub]
+            rw [smul_sub]
+            -- simp
+            -- rw [, ← A₁'.map_neg]
+            -- rw [(-A₁').map_add]
+            -- rw [← A₁'.map_smul (-admm.ρ) (((admm.A₂) (admm.x₂ n)) - ((admm.A₂) (admm.x₂ (n + 1))))]
             -- rw [add_comm A (C - y')]
             -- rw [add_assoc]
             -- rw [add_comm A (D - E)]
