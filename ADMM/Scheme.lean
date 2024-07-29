@@ -168,7 +168,7 @@ Thereoms
 
 -/
 --------------- 书430 (8.6.43) ---------------
-lemma subgradientAt_mono_u : ∀ n, (0 : ℝ) ≤ (inner (admm.u (n + 1) + (ContinuousLinearMap.adjoint admm.A₁) admm.y') (admm.x₁ (n + 1) - admm.x₁')) := sorry
+lemma subgradientAt_mono_u : ∀ n : ℕ+, (0 : ℝ) ≤ (inner (admm.u (n) + (ContinuousLinearMap.adjoint admm.A₁) admm.y') (admm.x₁ (n) - admm.x₁')) := sorry
 
 lemma subgradientAt_mono_v : ∀ n, (0 : ℝ) ≤ (inner (admm.v (n + 1) + (ContinuousLinearMap.adjoint admm.A₂) admm.y') (admm.x₂ (n + 1) - admm.x₂')) := sorry
 
@@ -180,7 +180,7 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
       )
       (admm.A₁ (admm.e₁ (n + 1)))) := by
    intro n
-   let A₁ := admm.A₁
+   -- let A₁ := admm.A₁
    let A₁' := (ContinuousLinearMap.adjoint admm.A₁)
    let Ae1 := admm.A₁ (admm.e₁ (n + 1))
    let e' := admm.e₁ (n + 1)
@@ -193,6 +193,7 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
          + (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1)))))
    let Aty' := A₁' admm.y' -- A_1^T y*
    let x_diff := admm.x₁ (n + 1) - admm.x₁'
+   let succ_n := Nat.toPNat' (n + 1)
    calc
       _= inner (𝕜 := ℝ) block Ae1 := by rfl
       _= inner (A₁' block) (e') := by
@@ -291,7 +292,10 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
          -- ring
          -- rfl
          -- ring
-      _≥ 0 := by sorry --apply subgradientAt_mono_u
+      _= (inner (admm.u (succ_n) + (ContinuousLinearMap.adjoint admm.A₁) admm.y') (admm.x₁ (succ_n) - admm.x₁')) := by rfl
+      _≥ 0 := by
+         -- sorry
+         apply subgradientAt_mono_u
 
 
 #check add_assoc
