@@ -190,9 +190,25 @@ lemma subgradientAt_mono_u : ∀ n : ℕ+, (0 : ℝ) ≤
 
          -- apply admm.y'.subgrad₁
 -- kkt
-#check admm.y'.subgrad₁
-#check admm.y'
-lemma subgradientAt_mono_v : ∀ n, (0 : ℝ) ≤ (inner (admm.v (n + 1) + (ContinuousLinearMap.adjoint admm.A₂) admm.y') (admm.x₂ (n + 1) - admm.x₂')) := sorry
+-- #check admm.y'.subgrad₁
+-- #check admm.y'
+lemma subgradientAt_mono_v : ∀ n : ℕ+, (0 : ℝ) ≤ (inner (admm.v (n) + (ContinuousLinearMap.adjoint admm.A₂) admm.y') (admm.x₂ (n) - admm.x₂')) := by
+   intro n
+   -- naming according to the book Pg 63 about monoticity of sub gradient
+   let u := admm.v (n)
+   let v := - (ContinuousLinearMap.adjoint admm.A₂) admm.y'
+   let x := admm.x₂ (n)
+   let y := admm.x₂'
+   calc
+      _= inner (u - v) (x - y) := by
+         simp[v]
+      _≥ (0 : ℝ) := by
+         apply subgradientAt_mono
+         apply v_inthesubgradient
+         letI kkt: Existance_of_kkt E₁ E₂ F admm := inferInstance
+         exact kkt.h.subgrad₂
+         -- (Convex_KKT admm.x₁' admm.x₂' admm.y').subgrad₁
+
 
 lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
    inner
@@ -291,18 +307,19 @@ lemma expended_v_gt_zero : ∀ n, (
    )
 ) ≥ (0 : ℝ) := by
    intro n
-   let ey' := admm.ey (n + 1)
+   let succ_n := Nat.toPNat' (n + 1)
+   let ey' := admm.ey (succ_n)
    let τ := admm.τ
    let ρ := admm.ρ
    let A₁ := admm.A₁
-   let e₁' := admm.e₁ (n + 1)
+   let e₁' := admm.e₁ (succ_n)
    let A₂ := admm.A₂
-   let e₂' := admm.e₂ (n + 1)
+   let e₂' := admm.e₂ (succ_n)
    let A₂' := (ContinuousLinearMap.adjoint admm.A₂)
    let y' := admm.y'
-   let y_k_1 := admm.y (n + 1)
-   let v_k_1 := admm.v (n + 1)
-   let x_diff := admm.x₂ (n + 1) - admm.x₂'
+   let y_k_1 := admm.y (succ_n)
+   let v_k_1 := admm.v (succ_n)
+   let x_diff := admm.x₂ (succ_n) - admm.x₂'
    #check (-ey' - ((1 - τ) * ρ) • (A₁ e₁'+ A₂ e₂'))
    calc
    _ = inner ( -ey'- ((1 - τ) * ρ) • (A₁ e₁' + A₂ e₂'))
