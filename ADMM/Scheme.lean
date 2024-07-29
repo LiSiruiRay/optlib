@@ -159,15 +159,7 @@ lemma Φ_isdescending_eq3 : ∀ n , admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (adm
 = Ae1 + admm.A₂ (admm.e₂ (n+1)) := sorry
 
 --lsr gyq
---书430 (8.6.43)
-/-
-Thereoms
-
-- theorem ContinuousLinearMap.adjoint_inner_left from https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/InnerProductSpace/Adjoint.html#ContinuousLinearMap.adjoint
-- subgradientAt_mono
-
--/
---------------- 书430 (8.6.43) ---------------
+--------------- 书430 (8.6.43) Ray---------------
 lemma subgradientAt_mono_u : ∀ n : ℕ+, (0 : ℝ) ≤
    (inner (admm.u (n) + (ContinuousLinearMap.adjoint admm.A₁) admm.y')
           (admm.x₁ (n) - admm.x₁')) := by
@@ -470,7 +462,7 @@ lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ*admm.ρ) * (inner (admm.ey (n+
 + admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
 -admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₂ (admm.e₂ (n+1))) ) ≥ 0:= sorry
 
----------------    书430 (8.6.43) end    ---------------
+---------------    书430 (8.6.43) end  Ray  ---------------
 --xzx dyx
 --书431 第五行
 lemma A'υ_inthesubgradient :∀ n , (- (ContinuousLinearMap.adjoint admm.A₂) ((admm.υ) n)) ∈ SubderivAt admm.f₂ (admm.x₂ n):= sorry
