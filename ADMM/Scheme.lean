@@ -143,7 +143,7 @@ def ADMM.M {self : ADMM E₁ E₂ F} : ℕ+→ ℝ  := fun n =>  ((1 - self.τ) 
 lemma u_inthesubgradient : ∀ n : ℕ+, (admm.u) n ∈ SubderivAt admm.f₁ (admm.x₁ n) := sorry
 
 --v在次梯度里面
-lemma v_inthesubgradient : ∀ n ≥ 1 , (admm.v) n ∈ SubderivAt admm.f₂ (admm.x₂ n) := sorry
+lemma v_inthesubgradient : ∀ n : ℕ+ , (admm.v) n ∈ SubderivAt admm.f₂ (admm.x₂ n) := sorry
 
 --lhj mht
 --书430 (8.6.42) 第一个等于号
@@ -168,8 +168,30 @@ Thereoms
 
 -/
 --------------- 书430 (8.6.43) ---------------
-lemma subgradientAt_mono_u : ∀ n : ℕ+, (0 : ℝ) ≤ (inner (admm.u (n) + (ContinuousLinearMap.adjoint admm.A₁) admm.y') (admm.x₁ (n) - admm.x₁')) := sorry
+lemma subgradientAt_mono_u : ∀ n : ℕ+, (0 : ℝ) ≤
+   (inner (admm.u (n) + (ContinuousLinearMap.adjoint admm.A₁) admm.y')
+          (admm.x₁ (n) - admm.x₁')) := by
+   intro n
+   -- naming according to the book Pg 63 about monoticity of sub gradient
+   let u := admm.u (n)
+   let v := - (ContinuousLinearMap.adjoint admm.A₁) admm.y'
+   let x := admm.x₁ (n)
+   let y := admm.x₁'
+   calc
+      _= inner (u - v) (x - y) := by
+         simp[v]
+      _≥ (0 : ℝ) := by
+         apply subgradientAt_mono
+         apply u_inthesubgradient
+         letI kkt: Existance_of_kkt E₁ E₂ F admm := inferInstance
+         exact kkt.h.subgrad₁
+         -- (Convex_KKT admm.x₁' admm.x₂' admm.y').subgrad₁
 
+
+         -- apply admm.y'.subgrad₁
+-- kkt
+#check admm.y'.subgrad₁
+#check admm.y'
 lemma subgradientAt_mono_v : ∀ n, (0 : ℝ) ≤ (inner (admm.v (n + 1) + (ContinuousLinearMap.adjoint admm.A₂) admm.y') (admm.x₂ (n + 1) - admm.x₂')) := sorry
 
 lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
