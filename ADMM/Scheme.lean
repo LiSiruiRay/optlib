@@ -276,16 +276,38 @@ lemma expended_v_gt_zero : ∀ n, (
    let e₁' := admm.e₁ (n + 1)
    let A₂ := admm.A₂
    let e₂' := admm.e₂ (n + 1)
+   let A₂' := (ContinuousLinearMap.adjoint admm.A₂)
+   let y' := admm.y'
+   let y_k_1 := admm.y (n + 1)
+   let v_k_1 := admm.v (n + 1)
+   let x_diff := admm.x₂ (n + 1) - admm.x₂'
    #check (-ey' - ((1 - τ) * ρ) • (A₁ e₁'+ A₂ e₂'))
    calc
-   _ = inner (
-         -ey'
-         - ((1 - τ) * ρ) •
-            ((A₁ (admm.e₁ (n + 1))) + (A₂ (admm.e₂ (n + 1))))
-      ) (
-         A₂ (admm.e₂ (n + 1))
-      ) := by sorry
-   _ ≥ (0 : ℝ) := by sorry
+   _ = inner ( -ey'- ((1 - τ) * ρ) • (A₁ e₁' + A₂ e₂'))
+             (A₂ e₂') := by rfl
+   _ = inner (A₂' (-ey'- ((1 - τ) * ρ) • (A₁ e₁' + A₂ e₂')))
+             (e₂') := by rw [ContinuousLinearMap.adjoint_inner_left]
+   _ = inner (-A₂' (ey'+ ((1 - τ) * ρ) • (A₁ e₁' + A₂ e₂')))
+             (e₂') := by
+               rw [sub_eq_add_neg]
+               rw [← neg_add]
+               rw [A₂'.map_neg]
+   _ = inner (-A₂' (y_k_1 - y' + ((1 - τ) * ρ) • (A₁ e₁' + A₂ e₂')))
+             (e₂') := by
+               have sub : ey' = y_k_1 - y' := by
+                  simp [ey']
+                  simp [y_k_1, y']
+                  rfl
+               rw [sub]
+   _ = inner (-A₂' (y_k_1 + ((1 - τ) * ρ) • (A₁ e₁' + A₂ e₂')) + A₂' y')
+             (e₂') := by
+               rw [sub_eq_add_neg, add_comm y_k_1, add_assoc]
+               rw [A₂'.map_add]
+               simp
+   _ = inner (v_k_1 + A₂' y') x_diff := by
+             rfl
+   _ ≥ (0 : ℝ) := by
+            apply subgradientAt_mono_v
 
 lemma starRingEnd_eq_R (x : ℝ) : (starRingEnd ℝ) x = x := rfl
 
