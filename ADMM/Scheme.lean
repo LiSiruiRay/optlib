@@ -267,7 +267,7 @@ lemma expended_v_gt_zero : ∀ n, (
    ) (
       admm.A₂ (admm.e₂ (n + 1))
    )
-) ≥ 0 := by
+) ≥ (0 : ℝ) := by
    intro n
    let ey' := admm.ey (n + 1)
    let τ := admm.τ
@@ -279,18 +279,13 @@ lemma expended_v_gt_zero : ∀ n, (
    #check (-ey' - ((1 - τ) * ρ) • (A₁ e₁'+ A₂ e₂'))
    calc
    _ = inner (
-         -admm.ey (n + 1)
-         - ((1 - admm.τ) * admm.ρ) •
-            ((admm.A₁ (admm.e₁ (n + 1))) + (admm.A₂ (admm.e₂ (n + 1))))
+         -ey'
+         - ((1 - τ) * ρ) •
+            ((A₁ (admm.e₁ (n + 1))) + (A₂ (admm.e₂ (n + 1))))
       ) (
-         admm.A₂ (admm.e₂ (n + 1))
+         A₂ (admm.e₂ (n + 1))
       ) := by sorry
-      -- _= @inner (𝕜:=F) (E:=F) _
-      --       (-(ey' : F) - (((1 - τ) * ρ) • (A₁ e₁'+ A₂ e₂') : F))
-      --       (A₂ e₂')
-      --    := by sorry
-   _ = 5 := sorry
-   _ ≥ 0 := by sorry
+   _ ≥ (0 : ℝ) := by sorry
 
 lemma starRingEnd_eq_R (x : ℝ) : (starRingEnd ℝ) x = x := rfl
 
