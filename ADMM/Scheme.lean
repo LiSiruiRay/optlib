@@ -251,47 +251,6 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
          rw [← u'_eq, Aty'_eq, add_comm, sub_eq_add_neg]
          simp[e', x_diff]
          rfl
-            -- simp
-            -- rw [, ← A₁'.map_neg]
-            -- rw [(-A₁').map_add]
-            -- rw [← A₁'.map_smul (-admm.ρ) (((admm.A₂) (admm.x₂ n)) - ((admm.A₂) (admm.x₂ (n + 1))))]
-            -- rw [add_comm A (C - y')]
-            -- rw [add_assoc]
-            -- rw [add_comm A (D - E)]
-            -- rw [← add_assoc]
-            -- rw [add_comm C A]
-            -- rw [← add_assoc]
-            -- rw [add_assoc (C + A)]
-            -- rw [add_comm (D - E)]
-            -- change
-
-            -- triv
-            -- simp_arith
-            -- simp
-            -- rfl
-            -- simp?
-            -- apply?
-            -- rw [add_assoc]
-            -- ring
-            -- rfl
-            -- simp
-            -- ring
-            -- rfl
-            -- rfl
-         -- simp[block]
-         -- have sub : ey (n + 1) = (admm.y (n + 1)) - admm.y' := by rfl
-         -- rw [sub]
-         -- simp
-         -- have sub₂ : admm.e₁ (n + 1) = e' := by rfl
-         -- rw [sub₂]
-         -- have sub₃ : Aty' = A₁' admm.y' := by rfl
-         -- rw [← sub₃]
-         -- have sub₄ : u' = - A₁' (admm.y (n + 1) + ((1-admm.τ) * admm.ρ) • (admm.A₁ (admm.e₁ (n + 1)) + admm.A₂ (admm.e₂ (n + 1))) + (admm.ρ • (admm.A₂ (admm.x₂ (n) - admm.x₂ (n+1))))) := by rfl
-         -- rw [sub₄]
-         -- simp
-         -- ring
-         -- rfl
-         -- ring
       _= (inner (admm.u (succ_n) + (ContinuousLinearMap.adjoint admm.A₁) admm.y') (admm.x₁ (succ_n) - admm.x₁')) := by rfl
       _≥ 0 := by
          -- sorry
@@ -308,7 +267,23 @@ lemma expended_v_gt_zero : ∀ n, (0 : ℝ) ≤ (
    ) (
       admm.A₂ (admm.e₂ (n + 1))
    )
-)  := sorry
+)  := by
+   intro n
+   let ey' := admm.ey (n + 1)
+   let τ := admm.τ
+   let ρ := admm.ρ
+   let A₁ := admm.A₁
+   let e₁' := admm.e₁ (n + 1)
+   let A₂ := admm.A₂
+   let e₂' := admm.e₂ (n + 1)
+   #check (-ey' - ((1 - τ) * ρ) • (A₁ e₁'+ A₂ e₂'))
+   calc
+      _= @inner (𝕜:=F) (E:=F) _
+            (-(ey' : F) - (((1 - τ) * ρ) • (A₁ e₁'+ A₂ e₂') : F))
+            (A₂ e₂')
+         := by sorry
+
+      _≥ 0 := by sorry
 
 lemma starRingEnd_eq_R (x : ℝ) : (starRingEnd ℝ) x = x := rfl
 
