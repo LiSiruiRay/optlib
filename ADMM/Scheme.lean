@@ -177,13 +177,6 @@ lemma subgradientAt_mono_u : ∀ n : ℕ+, (0 : ℝ) ≤
          apply u_inthesubgradient
          letI kkt: Existance_of_kkt E₁ E₂ F admm := inferInstance
          exact kkt.h.subgrad₁
-         -- (Convex_KKT admm.x₁' admm.x₂' admm.y').subgrad₁
-
-
-         -- apply admm.y'.subgrad₁
--- kkt
--- #check admm.y'.subgrad₁
--- #check admm.y'
 lemma subgradientAt_mono_v : ∀ n : ℕ+, (0 : ℝ) ≤ (inner (admm.v (n) + (ContinuousLinearMap.adjoint admm.A₂) admm.y') (admm.x₂ (n) - admm.x₂')) := by
    intro n
    -- naming according to the book Pg 63 about monoticity of sub gradient
@@ -199,7 +192,6 @@ lemma subgradientAt_mono_v : ∀ n : ℕ+, (0 : ℝ) ≤ (inner (admm.v (n) + (C
          apply v_inthesubgradient
          letI kkt: Existance_of_kkt E₁ E₂ F admm := inferInstance
          exact kkt.h.subgrad₂
-         -- (Convex_KKT admm.x₁' admm.x₂' admm.y').subgrad₁
 
 
 lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
@@ -210,7 +202,6 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
       )
       (admm.A₁ (admm.e₁ (n + 1)))) := by
    intro n
-   -- let A₁ := admm.A₁
    let A₁' := (ContinuousLinearMap.adjoint admm.A₁)
    let Ae1 := admm.A₁ (admm.e₁ (n + 1))
    let e' := admm.e₁ (n + 1)
@@ -243,10 +234,8 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
             rw [add_assoc]
             rw [← smul_add]
             rw [smul_sub]
-            -- simp
 
             let A := ((1 - admm.τ) * admm.ρ) • ((admm.A₁) (admm.e₁ (n + 1)) + (admm.A₂) (admm.e₂ (n + 1)))
-            -- let B := ((1 - admm.τ) * admm.ρ) • (admm.A₂) (admm.e₂ (n + 1))
             let C := admm.y (n + 1)
             let D := admm.ρ • ((admm.A₂) (admm.x₂ n))
             let E := admm.ρ • ((admm.A₂) (admm.x₂ (n + 1)))
@@ -283,7 +272,6 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
          rfl
       _= (inner (admm.u (succ_n) + (ContinuousLinearMap.adjoint admm.A₁) admm.y') (admm.x₁ (succ_n) - admm.x₁')) := by rfl
       _≥ 0 := by
-         -- sorry
          apply subgradientAt_mono_u
 
 
