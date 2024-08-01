@@ -160,6 +160,7 @@ lemma Φ_isdescending_eq3 : ∀ n , admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (adm
 
 --lsr gyq
 --------------- 书430 (8.6.43) Ray---------------
+-- TODO: can futher simplify everything.
 lemma subgradientAt_mono_u : ∀ n : ℕ+, (0 : ℝ) ≤
    (inner (admm.u (n) + (ContinuousLinearMap.adjoint admm.A₁) admm.y')
           (admm.x₁ (n) - admm.x₁')) := by
