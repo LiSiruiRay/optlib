@@ -275,7 +275,6 @@ lemma expended_u_gt_zero : ∀ n, (0 : ℝ) ≤ (
          apply subgradientAt_mono_u
 
 
-#check add_assoc
 
 lemma expended_v_gt_zero : ∀ n, (
    inner (
@@ -444,7 +443,6 @@ lemma expended_u_v_gt_zero : ∀ n , (inner (admm.ey (n + 1)) (-(admm.A₁ (admm
       apply expended_v_gt_zero
       apply expended_u_gt_zero
 
-#check smul_left
 lemma Φ_isdescending_inequ1 : ∀ n , 1/(admm.τ*admm.ρ) * (inner (admm.ey (n+1)) ((admm.ey n)-(admm.ey (n+1))))
 - (1-admm.τ)*admm.ρ*‖admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b‖^2
 + admm.ρ * (inner (admm.A₂ (admm.x₂ (n+1) - admm.x₂ n)) (admm.A₁ (admm.x₁ (n+1)) + admm.A₂ (admm.x₂ (n+1)) - admm.b))
